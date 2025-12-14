@@ -1,0 +1,17 @@
+{
+  "name": "rescue-system",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20",
+    "npm": ">=10"
+  },
+  "scripts": {
+    "dev": "npm -ws run dev",
+    "build": "npm -ws run build",
+    "typecheck": "npm -ws run typecheck"
+  }
+}

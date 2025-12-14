@@ -1,0 +1,40 @@
+services:
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile.dev
+    container_name: rescue_api
+    restart: unless-stopped
+    env_file:
+      - ./apps/api/.env
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=200
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./apps/api:/workspace
+      - api_node_modules:/workspace/node_modules
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile.dev
+    container_name: rescue_web
+    restart: unless-stopped
+    env_file:
+      - ./apps/web/.env
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=200
+    depends_on:
+      - api
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./apps/web:/workspace
+      - web_node_modules:/workspace/node_modules
+
+volumes:
+  api_node_modules:
+  web_node_modules:
