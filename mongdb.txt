@@ -1,8 +1,0 @@
-nguyenductrieutoank30chl_db_user
-tcTlINJ2WVaBcLx0
-
-mongodb+srv://nguyenductrieutoank30chl_db_user:tcTlINJ2WVaBcLx0@cluster0.kffgsis.mongodb.net/?appName=Cluster0
-
-
-dev
-1234567
