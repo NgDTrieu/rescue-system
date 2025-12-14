@@ -19,4 +19,4 @@ pnpm-debug.log*
 # OS
 .DS_Store
 
-./mongodb.txt
+mongdb.txt
