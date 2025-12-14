@@ -58,9 +58,9 @@ JWT_SECRET
 CORS_ORIGIN=http://localhost:5173
 
 PORT=4000
-
-2.2 Frontend env
-bash
+```
+### 2.2 Frontend env
+```bash
 Copy code
 cp apps/web/.env.example apps/web/.env
 Điền:
@@ -70,10 +70,10 @@ VITE_API_URL=http://localhost:4000
 VITE_SOCKET_URL=http://localhost:4000 (nếu dùng realtime)
 
 Lưu ý: KHÔNG commit file .env. Chỉ commit .env.example.
-
-3) Chạy dự án
-3.1 Chạy bằng Docker (khuyên dùng)
-bash
+```
+## 3) Chạy dự án
+### 3.1 Chạy bằng Docker (khuyên dùng)
+```bash
 Copy code
 docker compose -f docker-compose.dev.yml up --build
 Web: http://localhost:5173
@@ -81,13 +81,14 @@ Web: http://localhost:5173
 API: http://localhost:4000
 
 Swagger docs: http://localhost:4000/docs
-
-3.2 Seed Admin
-bash
+```
+### 3.2 Seed Admin
+```bash
 Copy code
 docker compose -f docker-compose.dev.yml exec api npm run seed:admin
-4) Backend guideline (cho người làm backend)
-4.1 Thêm module API mới (quy ước)
+```
+## 4) Backend guideline (cho người làm backend)
+### 4.1 Thêm module API mới (quy ước)
 Mỗi module nên có:
 
 *.model.ts (Mongoose schema)
@@ -111,7 +112,7 @@ Sau đó mount trong src/server.ts:
 ts
 Copy code
 app.use("/requests", requestRoutes);
-4.2 Middleware & phân quyền
+### 4.2 Middleware & phân quyền
 authGuard: kiểm tra Bearer JWT
 
 requireRole("CUSTOMER" | "COMPANY" | "ADMIN")
@@ -126,7 +127,7 @@ API công ty: authGuard + requireRole("COMPANY") + requireCompanyActive
 
 API admin: authGuard + requireRole("ADMIN")
 
-4.3 Swagger/OpenAPI docs
+### 4.3 Swagger/OpenAPI docs
 Swagger UI: GET /docs
 
 JSON spec: GET /docs.json
@@ -139,11 +140,11 @@ Thêm OpenAPI comment trong *.routes.ts
 
 Tái sử dụng schema $ref trong components/schemas (xem src/shared/swagger.ts)
 
-5) Frontend guideline (cho người làm frontend)
-5.1 Chạy frontend (khi Docker đang chạy)
+## 5) Frontend guideline (cho người làm frontend)
+### 5.1 Chạy frontend (khi Docker đang chạy)
 Vào http://localhost:5173
 
-5.2 Gọi API
+### 5.2 Gọi API
 Sử dụng VITE_API_URL từ .env:
 
 Ví dụ: fetch(${import.meta.env.VITE_API_URL}/auth/login, ...)
@@ -154,7 +155,7 @@ apps/web/src/services/api.ts (axios/fetch wrapper)
 
 Tách theo module: authApi.ts, requestApi.ts...
 
-5.3 Auth flow cơ bản
+### 5.3 Auth flow cơ bản
 POST /auth/login → nhận accessToken
 
 Lưu token (localStorage hoặc state)
@@ -164,7 +165,7 @@ Gọi GET /auth/me để lấy profile
 Khi gọi API cần auth → set header:
 Authorization: Bearer <token>
 
-5.4 Vai trò & trạng thái công ty
+### 5.4 Vai trò & trạng thái công ty
 CUSTOMER: tạo yêu cầu cứu hộ
 
 COMPANY:
@@ -173,7 +174,7 @@ Có thể login nhưng nếu companyStatus != ACTIVE thì bị chặn các nghi�
 
 ADMIN: duyệt công ty qua /admin/...
 
-6) Tài liệu Use Case
+## 6) Tài liệu Use Case
 docs/usecases.md (kèm ảnh trong assets/)
 
 less
