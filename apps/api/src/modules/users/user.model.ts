@@ -17,6 +17,18 @@ export interface IUser extends Document {
 
   createdAt: Date;
   updatedAt: Date;
+
+
+  companyLocation?: {
+    type: "Point";
+    coordinates: [number, number]; // [lng, lat]
+  };
+
+  companyServices?: Array<{
+    categoryId: any;     // ObjectId
+    basePrice: number;   // giá cơ bản
+  }>;
+
 }
 
 const UserSchema = new Schema<IUser>(
@@ -30,9 +42,27 @@ const UserSchema = new Schema<IUser>(
 
     companyName: { type: String },
     companyStatus: { type: String, enum: ["PENDING", "ACTIVE", "REJECTED"], default: undefined },
+  
+    companyLocation: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        default: undefined,
+      },
+      coordinates: { type: [Number], default: undefined }, // [lng, lat]
+    },
+
+    companyServices: [
+      {
+        categoryId: { type: Schema.Types.ObjectId, ref: "ServiceCategory", required: true },
+        basePrice: { type: Number, required: true, min: 0 },
+      },
+    ],
+
   },
   { timestamps: true }
 );
 
+UserSchema.index({ companyLocation: "2dsphere" });
 
 export const UserModel = model<IUser>("User", UserSchema);

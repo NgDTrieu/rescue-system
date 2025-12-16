@@ -12,6 +12,8 @@ import { swaggerSpec } from "./shared/swagger";
 import adminRoutes from "./modules/admin/admin.routes";
 import companyRoutes from "./modules/company/company.routes";
 import requestRoutes from "./modules/requests/request.routes";
+import categoryRoutes from "./modules/categories/category.routes";
+
 
 
 const app = express();
@@ -25,7 +27,9 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/admin", adminRoutes);
 app.use("/company", companyRoutes);
 app.use("/requests", requestRoutes);
+app.use("/categories", categoryRoutes);
 app.get("/health", (_req, res) => res.json({ ok: true, ts: Date.now() }));
+
 
 // TODO: mount routers here: /auth, /requests, /services, /messages, /feedbacks, /admin
 

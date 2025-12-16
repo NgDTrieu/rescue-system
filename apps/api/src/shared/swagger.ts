@@ -156,6 +156,66 @@ export const swaggerSpec = swaggerJSDoc({
             createdAt: { type: "string", example: "2025-12-13T12:00:00.000Z" },
           },
         },
+        CategoryItem: {
+          type: "object",
+          properties: {
+            id: { type: "string", example: "65f0c..." },
+            key: { type: "string", example: "FUEL" },
+            name: { type: "string", example: "Cứu hộ hết xăng" },
+            description: { type: "string", example: "Tiếp nhiên liệu tại chỗ" },
+          },
+        },
+
+        CategoryListResponse: {
+          type: "object",
+          properties: {
+            count: { type: "number", example: 5 },
+            items: {
+              type: "array",
+              items: { $ref: "#/components/schemas/CategoryItem" },
+            },
+          },
+        },
+        CompanyServiceInput: {
+          type: "object",
+          required: ["categoryId", "basePrice"],
+          properties: {
+            categoryId: { type: "string", example: "65f0c..." },
+            basePrice: { type: "number", example: 80000 },
+          },
+        },
+
+        UpdateCompanyProfileRequest: {
+          type: "object",
+          required: ["lat", "lng", "services"],
+          properties: {
+            lat: { type: "number", example: 21.028 },
+            lng: { type: "number", example: 105.834 },
+            services: {
+              type: "array",
+              items: { $ref: "#/components/schemas/CompanyServiceInput" },
+            },
+          },
+        },
+
+        UpdateCompanyProfileResponse: {
+          type: "object",
+          properties: {
+            id: { type: "string", example: "693d..." },
+            companyLocation: {
+              type: "object",
+              properties: {
+                lat: { type: "number", example: 21.028 },
+                lng: { type: "number", example: 105.834 },
+              },
+            },
+            companyServices: {
+              type: "array",
+              items: { $ref: "#/components/schemas/CompanyServiceInput" },
+            },
+            updatedAt: { type: "string", example: "2025-12-16T12:00:00.000Z" },
+          },
+        },
 
       },
     },
