@@ -140,39 +140,84 @@ Thêm OpenAPI comment trong *.routes.ts
 
 Tái sử dụng schema $ref trong components/schemas (xem src/shared/swagger.ts)
 
-## 5) Frontend guideline (cho người làm frontend)
-### 5.1 Chạy frontend (khi Docker đang chạy)
-Vào http://localhost:5173
+## 5) Frontend guideline (ngắn gọn, đúng cách team đang làm)
 
-### 5.2 Gọi API
-Sử dụng VITE_API_URL từ .env:
+### 5.1 Chạy frontend (Docker)
+- Mở: http://localhost:5173
+- Code: `apps/web/`
+- Cài thêm package (làm trong container):
+  - `docker compose exec web sh`
+  - `npm i <package>`
+- Commit kèm: `apps/web/package.json` + `apps/web/package-lock.json`
 
-Ví dụ: fetch(${import.meta.env.VITE_API_URL}/auth/login, ...)
+---
 
-Khuyến nghị tạo lớp service:
+### 5.2 Nơi đặt code UI (quan trọng)
+Trong `apps/web/src/`:
+- `pages/` : mỗi màn hình 1 file (theo module)
+  - Ví dụ auth:  
+    - `pages/auth/AuthWelcome.tsx`  
+    - `pages/auth/Login.tsx`  
+    - `pages/auth/Register.tsx`
+- `pages/<module>/<module>.css` : CSS riêng theo module (khuyến nghị)
+  - Ví dụ: `pages/auth/auth.css`
+- `assets/` : ảnh/logo
+  - Ví dụ: `src/assets/logochuan.png`
+- `services/` : tầng gọi API (không gọi fetch/axios trực tiếp trong JSX)
+  - Ví dụ: `services/api.ts`, `services/authApi.ts`
 
-apps/web/src/services/api.ts (axios/fetch wrapper)
+---
 
-Tách theo module: authApi.ts, requestApi.ts...
+### 5.3 Tạo Page mới (quy trình bắt buộc)
+1) Tạo file page tại `src/pages/<module>/...`
+2) Nếu có style riêng: tạo `src/pages/<module>/<module>.css` và import trong page:
+   - `import "./auth.css";`
+3) Thêm route trong `apps/web/src/App.tsx`
+4) Điều hướng bằng `useNavigate()`  
+> Nếu gặp lỗi `No routes matched location "/..."` => thiếu route trong `App.tsx`.
 
-### 5.3 Auth flow cơ bản
-POST /auth/login → nhận accessToken
+---
 
-Lưu token (localStorage hoặc state)
+### 5.4 “Phone frame” (UI giả lập app mobile)
+- Mọi page kiểu auth nên bọc theo khung:
+  - `.auth-root` + `.auth-shell`
+- Quy ước chống scroll ngoài:
+  - `body { overflow: hidden; }`
+- Nếu page cần scroll nội dung: tạo container nội bộ (vd `.screen-scroll`) và set `overflow: auto; height: 100%;`
 
-Gọi GET /auth/me để lấy profile
+---
 
-Khi gọi API cần auth → set header:
-Authorization: Bearer <token>
+### 5.5 CSS chỉnh ở đâu?
+- CSS dùng chung tối thiểu để ở `src/index.css` (reset + phone frame base).
+- CSS từng module để ở `src/pages/<module>/<module>.css` (để `index.css` không bị dài và tránh đè nhau).
 
-### 5.4 Vai trò & trạng thái công ty
-CUSTOMER: tạo yêu cầu cứu hộ
+---
 
-COMPANY:
+### 5.6 ENV & API base URL (Vite)
+- File mẫu: `apps/web/.env.example`
+- File chạy local: `apps/web/.env` (KHÔNG push git)
+- Dùng trong code:
+  - `import.meta.env.VITE_API_URL`
 
-Có thể login nhưng nếu companyStatus != ACTIVE thì bị chặn các nghiệp vụ chính
+---
 
-ADMIN: duyệt công ty qua /admin/...
+### 5.7 Auth flow 
+- `POST /auth/login` -> nhận `accessToken`
+- Lưu token:
+  - `localStorage.setItem("accessToken", token)`
+- API cần auth:
+  - Header: `Authorization: Bearer <token>`
+- Logout:
+  - `localStorage.removeItem("accessToken")`
+
+---
+
+### 5.8 Checklist trước khi commit UI
+- [ ] Page nằm đúng `src/pages/<module>/`
+- [ ] Route đã thêm trong `App.tsx`
+- [ ] CSS module không đè nhau, `index.css` không phình to
+- [ ] API gọi qua `src/services/*`
+- [ ] Không commit `.env`
 
 ## 6) Tài liệu Use Case
 docs/usecases.md (kèm ảnh trong assets/)
