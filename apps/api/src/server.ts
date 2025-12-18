@@ -17,8 +17,6 @@ import companiesRoutes from "./modules/companies/companies.routes";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./shared/swagger";
 
-import { initRealtime } from "./shared/realtime";
-
 const app = express();
 
 app.use(helmet());
@@ -41,11 +39,6 @@ app.get("/health", (_req, res) => res.json({ ok: true, ts: Date.now() }));
 
 const port = Number(process.env.PORT || 4000);
 
-// Tạo HTTP server để Socket.IO dùng chung port với API
-const httpServer = createServer(app);
-
-// Init realtime (Socket.IO + JWT auth + join room user:<id>)
-initRealtime(httpServer);
 
 (async () => {
   // IMPORTANT: fallback này chạy tốt trong Docker compose vì service tên là "mongo"
@@ -54,7 +47,7 @@ initRealtime(httpServer);
 
   await connectDB(uri);
 
-  httpServer.listen(port, () => {
+  app.listen(port, () => {
     console.log(`[api] listening on :${port}`);
   });
 })();

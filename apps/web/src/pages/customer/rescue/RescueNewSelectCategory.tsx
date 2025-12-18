@@ -15,17 +15,34 @@ export default function RescueNewSelectCategory() {
   const navigate = useNavigate();
   const [tab, setTab] = useState("home");
 
-  // tạm mock trước (Bước 2 mình sẽ gọi API /categories thật)
-  const [items, setItems] = useState<Category[]>([
-    { id: "mock1", key: "FUEL", name: "Cứu hộ hết xăng", description: "Tiếp nhiên liệu tại chỗ" },
-    { id: "mock2", key: "TIRE", name: "Thủng lốp", description: "Vá / thay lốp" },
-    { id: "mock3", key: "BATTERY", name: "Hết ắc quy", description: "Kích bình / thay" },
-    { id: "mock4", key: "TOW", name: "Kéo xe", description: "Cứu hộ kéo xe" },
-  ]);
+  const [items, setItems] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
 
   useEffect(() => {
-    // Bước 2: sẽ thay mock bằng fetch GET /categories
+    const run = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const API = import.meta.env.VITE_API_URL || "http://localhost:4000";
+        const res = await fetch(`${API}/categories`, {
+          headers: { "Content-Type": "application/json" },
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Không tải được danh sách dịch vụ");
+
+        // theo ảnh swagger: { count, items: [...] }
+        setItems(data.items || []);
+      } catch (e: any) {
+        setError(e.message || "Lỗi tải categories");
+      } finally {
+        setLoading(false);
+      }
+    };
+    run();
   }, []);
+
 
   return (
     <AppShell>
@@ -47,23 +64,23 @@ export default function RescueNewSelectCategory() {
           </div>
 
           <div style={{ height: 12 }} />
-
-          <div className="tile-grid">
-            {items.map((c) => (
-              <button
-                key={c.id}
-                className="tile"
-                onClick={() => {
-                  // Bước 3: chuyển sang màn nhập vị trí + truyền categoryId
-                  navigate("/customer/rescue/new/location", { state: { category: c } });
-                }}
-              >
-                <div className="tile-ico">⚡</div>
-                <div className="tile-lbl">{c.name}</div>
-                <div className="sub" style={{ marginTop: 0 }}>{c.description || ""}</div>
-              </button>
-            ))}
-          </div>
+          {loading && <div className="sub">Đang tải dịch vụ...</div>}
+          {error && <div className="authForm-error">{error}</div>}
+          {!loading && !error && (
+            <div className="tile-grid">
+              {items.map((c) => (
+                <button
+                  key={c.id}
+                  className="tile"
+                  onClick={() => navigate("/customer/rescue/new/location", { state: { category: c } })}
+                >
+                  <div className="tile-ico">⚡</div>
+                  <div className="tile-lbl">{c.name}</div>
+                  <div className="sub" style={{ marginTop: 0 }}>{c.description || ""}</div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

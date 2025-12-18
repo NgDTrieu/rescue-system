@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { RescueRequestModel } from "./request.model";
 
-// Nếu bạn đã có realtime backend: mở comment phần getIO()
-// import { getIO } from "../../shared/realtime";
+
 
 export async function cancelMyRequest(req: Request, res: Response) {
   const customerId = (req as any).user?.sub;
@@ -25,13 +24,6 @@ export async function cancelMyRequest(req: Request, res: Response) {
   doc.cancelledBy = "CUSTOMER";
 
   await doc.save();
-
-  // Realtime notify company (nếu có)
-  getIO().to(`user:${String(doc.assignedCompanyId)}`).emit("request:cancelled", {
-    requestId: String(doc._id),
-    reason: doc.cancelReason,
-    cancelledAt: doc.cancelledAt,
-  });
 
   return res.json({
     id: doc._id,

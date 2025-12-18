@@ -1,7 +1,27 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AppShell from "./AppShell";
 import BottomNav from "./BottomNav";
 import "./home.css";
+
+type CompanyRequest = {
+  id: string;
+  status: "PENDING" | "ASSIGNED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+  categoryId: string;
+  quotedBasePrice: number;
+  issueType: string;
+  note?: string;
+  contactName: string;
+  contactPhone: string;
+  addressText?: string;
+  location: { lat: number; lng: number };
+  createdAt: string;
+};
+
+type ListResp = {
+  status: string;
+  count: number;
+  items: CompanyRequest[];
+};
 
 function StatCard({
   label,
@@ -26,12 +46,14 @@ function StatCard({
 function ManageTile({
   label,
   icon,
+  onClick,
 }: {
   label: string;
   icon: React.ReactNode;
+  onClick?: () => void;
 }) {
   return (
-    <button className="tile">
+    <button className="tile" onClick={onClick}>
       <div className="tile-ico">{icon}</div>
       <div className="tile-lbl">{label}</div>
     </button>
@@ -45,14 +67,8 @@ export default function CompanyHome() {
   const user = raw ? JSON.parse(raw) : null;
 
   const companyName = user?.companyName || "Cứu hộ Minh Tâm";
-  const companyStatus = user?.companyStatus || "PENDING"; // mock default
-
+  const companyStatus = user?.companyStatus || "PENDING";
   const isActive = companyStatus === "ACTIVE";
-
-  // mock số liệu
-  const newRequests = 8;
-  const inProgress = 5;
-  const doneToday = 12;
 
   const statusText = useMemo(() => {
     if (companyStatus === "ACTIVE") return "Đang hoạt động";
@@ -61,6 +77,80 @@ export default function CompanyHome() {
     if (companyStatus === "SUSPENDED") return "Tạm khóa";
     return `Trạng thái: ${companyStatus}`;
   }, [companyStatus]);
+
+  // ====== DATA (real) ======
+  const API = useMemo(() => import.meta.env.VITE_API_URL || "http://localhost:4000", []);
+
+  const [pendingCount, setPendingCount] = useState(0);
+  const [inProgressCount, setInProgressCount] = useState(0);
+  const [doneTodayCount, setDoneTodayCount] = useState(0);
+
+  const [loadingStats, setLoadingStats] = useState(false);
+  const [statsError, setStatsError] = useState("");
+
+  const isToday = (iso: string) => {
+    const d = new Date(iso);
+    const now = new Date();
+    const start = new Date(now);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(now);
+    end.setHours(23, 59, 59, 999);
+    return d >= start && d <= end;
+  };
+
+  const fetchByStatus = async (status: string): Promise<ListResp> => {
+    const token = localStorage.getItem("accessToken");
+    const res = await fetch(`${API}/company/requests?status=${encodeURIComponent(status)}`, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || `Fetch ${status} failed`);
+    return data as ListResp;
+  };
+
+  const refreshStats = async () => {
+    if (!isActive) return; // company chưa ACTIVE thì không gọi
+    setLoadingStats(true);
+    setStatsError("");
+
+    try {
+      const [pending, assigned, inprog, completed, cancelled] = await Promise.all([
+        fetchByStatus("PENDING"),
+        fetchByStatus("ASSIGNED"),
+        fetchByStatus("IN_PROGRESS"),
+        fetchByStatus("COMPLETED"),
+        fetchByStatus("CANCELLED"),
+      ]);
+
+      setPendingCount(pending.count || 0);
+      setInProgressCount((assigned.count || 0) + (inprog.count || 0));
+
+      // “Hoàn thành hôm nay” = COMPLETED + CANCELLED nhưng lọc theo createdAt trong ngày
+      // const doneToday =
+      //   (completed.items || []).filter((x) => isToday(x.createdAt)).length +
+      //   (cancelled.items || []).filter((x) => isToday(x.createdAt)).length;
+
+      setDoneTodayCount((completed.count || 0) + (cancelled.count || 0));
+    } catch (e: any) {
+      setStatsError(e.message || "Không tải được thống kê");
+      setPendingCount(0);
+      setInProgressCount(0);
+      setDoneTodayCount(0);
+    } finally {
+      setLoadingStats(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshStats();
+    // Optional: nếu muốn auto refresh mỗi 10s
+    // const t = setInterval(refreshStats, 10000);
+    // return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isActive]);
 
   return (
     <AppShell>
@@ -75,50 +165,48 @@ export default function CompanyHome() {
             </div>
           </div>
 
-          <div className="avatar">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" strokeWidth="2" />
-              <path d="M4 20a8 8 0 0 1 16 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            {isActive && (
+              <button
+                className="dash-bell"
+                onClick={refreshStats}
+                title="Tải lại"
+                aria-label="Tải lại"
+                style={{ background: "rgba(44,121,255,0.12)", color: "#2c79ff" }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M20 12a8 8 0 1 1-2.34-5.66"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M20 4v6h-6"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            )}
+
+            <div className="avatar">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" strokeWidth="2" />
+                <path d="M4 20a8 8 0 0 1 16 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </div>
           </div>
         </div>
 
-        {/* Nếu chưa ACTIVE => chỉ hiện màn chờ duyệt */}
+        {/* Nếu chưa ACTIVE => chỉ hiện chờ duyệt */}
         {!isActive ? (
           <div className="card" style={{ marginTop: 14 }}>
             <div className="h1" style={{ fontSize: 16 }}>Chờ phê duyệt</div>
             <div className="sub">
-              Tài khoản công ty của bạn đang ở trạng thái <b>{companyStatus}</b>. Vui lòng chờ Admin xét duyệt để sử dụng đầy đủ chức năng.
-            </div>
-
-            <div className="pending-box">
-              <div className="pending-steps">
-                <div className="pending-step">
-                  <div className="pending-num">1</div>
-                  <div>
-                    <div className="pending-title">Hoàn thiện thông tin</div>
-                    <div className="pending-desc">Đảm bảo tên công ty, SĐT, email chính xác.</div>
-                  </div>
-                </div>
-                <div className="pending-step">
-                  <div className="pending-num">2</div>
-                  <div>
-                    <div className="pending-title">Admin duyệt</div>
-                    <div className="pending-desc">Admin sẽ kiểm tra và kích hoạt tài khoản.</div>
-                  </div>
-                </div>
-                <div className="pending-step">
-                  <div className="pending-num">3</div>
-                  <div>
-                    <div className="pending-title">Bắt đầu nhận yêu cầu</div>
-                    <div className="pending-desc">Sau khi ACTIVE, bạn sẽ thấy dashboard và chức năng xử lý.</div>
-                  </div>
-                </div>
-              </div>
-
-              <button className="provider-btn" style={{ width: "100%", marginTop: 12 }}>
-                Liên hệ Admin (tạm)
-              </button>
+              Tài khoản công ty đang ở trạng thái <b>{companyStatus}</b>. Vui lòng chờ Admin kích hoạt để sử dụng đầy đủ chức năng.
             </div>
           </div>
         ) : (
@@ -126,11 +214,13 @@ export default function CompanyHome() {
             {/* Dashboard */}
             <div style={{ height: 14 }} />
 
+            {statsError && <div className="authForm-error">{statsError}</div>}
+
             <div className="card dash">
               <div className="dash-top">
                 <div className="dash-left">
-                  <div className="sub" style={{ marginTop: 0 }}>Yêu cầu mới</div>
-                  <div className="dash-big">{newRequests}</div>
+                  <div className="sub" style={{ marginTop: 0 }}>Yêu cầu mới (PENDING)</div>
+                  <div className="dash-big">{loadingStats ? "…" : pendingCount}</div>
                 </div>
 
                 <button className="dash-bell" aria-label="Thông báo">
@@ -151,12 +241,12 @@ export default function CompanyHome() {
               <div className="stat-row">
                 <StatCard
                   label="Đang xử lý"
-                  value={inProgress}
+                  value={loadingStats ? 0 : inProgressCount}
                   icon={<span className="miniDot" />}
                 />
                 <StatCard
                   label="Hoàn thành hôm nay"
-                  value={doneToday}
+                  value={loadingStats ? 0 : doneTodayCount}
                   icon={
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                       <path
@@ -187,32 +277,10 @@ export default function CompanyHome() {
                   </svg>
                 }
               />
+
+              {/* đổi “Nhắn tin khách hàng” -> “Cập nhật thông tin” */}
               <ManageTile
-                label="Nhắn tin khách hàng"
-                icon={
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M20 15a4 4 0 0 1-4 4H8l-4 3V7a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v8Z"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                }
-              />
-              <ManageTile
-                label="Đọc phản hồi"
-                icon={
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M12 17.3l-5.4 3 1-6-4.4-4.2 6.1-.9L12 3.7l2.7 5.5 6.1.9-4.4 4.2 1 6-5.4-3Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                }
-              />
-              <ManageTile
-                label="Quản lý thông tin"
+                label="Cập nhật thông tin"
                 icon={
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                     <path
@@ -225,6 +293,38 @@ export default function CompanyHome() {
                       stroke="currentColor"
                       strokeWidth="1.6"
                       strokeLinejoin="round"
+                    />
+                  </svg>
+                }
+              />
+
+              <ManageTile
+                label="Đọc phản hồi"
+                icon={
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 17.3l-5.4 3 1-6-4.4-4.2 6.1-.9L12 3.7l2.7 5.5 6.1.9-4.4 4.2 1 6-5.4-3Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                }
+              />
+
+              {/* đổi “Quản lý thông tin” -> “Lịch sử yêu cầu” */}
+              <ManageTile
+                label="Lịch sử yêu cầu"
+                icon={
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M12 8v5l3 2"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M21 12a9 9 0 1 1-9-9 9 9 0 0 1 9 9Z"
+                      stroke="currentColor"
+                      strokeWidth="2"
                     />
                   </svg>
                 }
