@@ -1,57 +1,64 @@
-import { useState } from "react";
+// apps/web/src/pages/auth/Register.tsx
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// Nếu bạn đã tạo service api thì import, nếu chưa thì dùng fetch/axios trực tiếp
-// import api from "../../services/api"; 
+import "./authWelcome.css";
+import "./authForms.css";
+
+type Role = "CUSTOMER" | "COMPANY";
 
 export default function Register() {
   const navigate = useNavigate();
 
-  // 1. Quản lý toàn bộ dữ liệu form trong 1 state object cho gọn
+  const API = useMemo(() => import.meta.env.VITE_API_URL || "http://localhost:4000", []);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     phone: "",
-    role: "CUSTOMER", // Mặc định là khách hàng
-    companyName: ""   // Chỉ dùng khi role = COMPANY
+    role: "CUSTOMER" as Role,
+    companyName: "",
   });
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Hàm xử lý chung cho mọi ô input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ 
-      ...formData, 
-      [e.target.name]: e.target.value 
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleRegister = async () => {
-    setError(""); // Reset lỗi cũ
+    setError("");
     setLoading(true);
 
     try {
-      // 2. Gọi API đăng ký
-      // Lưu ý: Thay URL này bằng import.meta.env.VITE_API_URL nếu bạn muốn chuẩn chỉnh
-      const response = await fetch("http://localhost:4000/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Đăng ký thất bại");
+      // validate nhanh (để tránh gọi API vô ích)
+      if (!formData.name.trim()) throw new Error("Vui lòng nhập họ tên.");
+      if (!formData.email.trim()) throw new Error("Vui lòng nhập email.");
+      if (!formData.password.trim()) throw new Error("Vui lòng nhập mật khẩu.");
+      if (formData.role === "COMPANY" && !formData.companyName.trim()) {
+        throw new Error("Vui lòng nhập tên đơn vị cứu hộ.");
       }
 
-      // 3. Đăng ký thành công -> Chuyển sang trang Login
+      const payload = {
+        ...formData,
+        companyName: formData.role === "COMPANY" ? formData.companyName : "",
+      };
+
+      const res = await fetch(`${API}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Đăng ký thất bại");
+
       alert("Đăng ký thành công! Vui lòng đăng nhập.");
       navigate("/auth/login");
-
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "Có lỗi xảy ra");
     } finally {
       setLoading(false);
     }
@@ -59,113 +66,141 @@ export default function Register() {
 
   return (
     <div className="auth-root">
-      <div className="auth-shell" style={{ padding: "30px 20px", overflowY: "auto" }}>
-        <h2 style={{ marginTop: 0, textAlign: "center", color: "#0b1b33" }}>Đăng ký tài khoản</h2>
-        
-        {/* Hiển thị lỗi nếu có */}
-        {error && (
-          <div style={{ color: "red", background: "#fee", padding: "10px", borderRadius: "8px", marginBottom: "15px", fontSize: "14px" }}>
-            {error}
-          </div>
-        )}
+      <div className="auth-shell">
+        {/* Nền đồng nhất với AuthWelcome */}
+        <div className="aw2 authForm">
+          <div className="aw2-bg" aria-hidden="true" />
+          <div className="aw2-triangles" aria-hidden="true" />
+          <div className="aw2-sparkle" aria-hidden="true" />
 
-        <div style={{ display: "grid", gap: "12px" }}>
-          {/* Họ tên */}
-          <div>
-            <label style={{fontSize: "13px", fontWeight: 600, color: "#555"}}>Họ tên</label>
-            <input 
-              name="name"
-              placeholder="Nguyễn Văn A" 
-              className="custom-input" // Bạn có thể thêm class CSS hoặc style trực tiếp
-              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #ddd", marginTop: "4px" }}
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label style={{fontSize: "13px", fontWeight: 600, color: "#555"}}>Email</label>
-            <input 
-              name="email"
-              type="email"
-              placeholder="email@example.com" 
-              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #ddd", marginTop: "4px" }}
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-
-          {/* Mật khẩu */}
-          <div>
-            <label style={{fontSize: "13px", fontWeight: 600, color: "#555"}}>Mật khẩu</label>
-            <input 
-              name="password"
-              type="password"
-              placeholder="Tối thiểu 6 ký tự" 
-              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #ddd", marginTop: "4px" }}
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </div>
-
-          {/* Số điện thoại */}
-          <div>
-            <label style={{fontSize: "13px", fontWeight: 600, color: "#555"}}>Số điện thoại</label>
-            <input 
-              name="phone"
-              placeholder="0912..." 
-              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #ddd", marginTop: "4px" }}
-              value={formData.phone}
-              onChange={handleChange}
-            />
-          </div>
-
-          {/* Vai trò (Role) */}
-          <div>
-            <label style={{fontSize: "13px", fontWeight: 600, color: "#555"}}>Bạn là?</label>
-            <select 
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #ddd", marginTop: "4px", backgroundColor: "#fff" }}
-            >
-              <option value="CUSTOMER">Người cần cứu hộ (Khách hàng)</option>
-              <option value="COMPANY">Đơn vị cứu hộ (Công ty)</option>
-            </select>
-          </div>
-
-          {/* Logic hiển thị Tên công ty: Chỉ hiện khi Role là COMPANY */}
-          {formData.role === "COMPANY" && (
-            <div style={{ animation: "fadeIn 0.3s ease-in" }}>
-              <label style={{fontSize: "13px", fontWeight: 600, color: "#555"}}>Tên đơn vị cứu hộ</label>
-              <input 
-                name="companyName"
-                placeholder="VD: Cứu hộ Ba Đình..." 
-                style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #ddd", marginTop: "4px", borderColor: "#1f6fe5" }}
-                value={formData.companyName}
-                onChange={handleChange}
-              />
+          {/* Layout cột: Topbar -> Card (scroll) -> Actions (fixed bottom) */}
+          <div
+            className="authForm-content"
+            style={{
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            {/* Top bar */}
+            <div className="authForm-topbar">
+              <button className="authForm-back" onClick={() => navigate("/auth")} aria-label="Quay lại">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M15 18l-6-6 6-6"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+              <div className="authForm-topTitle">Đăng ký</div>
             </div>
-          )}
 
-          {/* Nút Đăng ký */}
-          <button 
-            className="btn btn-primary" 
-            onClick={handleRegister} 
-            disabled={loading}
-            style={{ marginTop: "10px" }}
-          >
-            {loading ? "Đang xử lý..." : "Đăng ký tài khoản"}
-          </button>
+            {error && <div className="authForm-error">{error}</div>}
 
-          {/* Link quay lại Login */}
-          <button 
-            className="btn btn-outline" 
-            onClick={() => navigate("/auth/login")}
-          >
-            Đã có tài khoản? Đăng nhập
-          </button>
+            {/* Card trắng chỉ chứa fields + scroll */}
+            <div
+              className="authForm-card"
+              style={{
+                flex: "1 1 auto",
+                overflow: "auto",
+              }}
+            >
+              <div className="authForm-fields">
+                <div>
+                  <div className="authForm-label">Họ tên</div>
+                  <input
+                    className="authForm-input"
+                    name="name"
+                    placeholder="Nguyễn Văn A"
+                    value={formData.name}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div>
+                  <div className="authForm-label">Email</div>
+                  <input
+                    className="authForm-input"
+                    name="email"
+                    type="email"
+                    placeholder="email@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div>
+                  <div className="authForm-label">Mật khẩu</div>
+                  <input
+                    className="authForm-input"
+                    name="password"
+                    type="password"
+                    placeholder="Tối thiểu 6 ký tự"
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div>
+                  <div className="authForm-label">Số điện thoại</div>
+                  <input
+                    className="authForm-input"
+                    name="phone"
+                    placeholder="0912..."
+                    value={formData.phone}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <div>
+                  <div className="authForm-label">Bạn là?</div>
+                  <select className="authForm-select" name="role" value={formData.role} onChange={handleChange}>
+                    <option value="CUSTOMER">Người cần cứu hộ (Khách hàng)</option>
+                    <option value="COMPANY">Đơn vị cứu hộ (Công ty)</option>
+                  </select>
+                </div>
+
+                {formData.role === "COMPANY" && (
+                  <div>
+                    <div className="authForm-label">Tên đơn vị cứu hộ</div>
+                    <input
+                      className="authForm-input"
+                      name="companyName"
+                      placeholder="VD: Cứu hộ Ba Đình"
+                      value={formData.companyName}
+                      onChange={handleChange}
+                    />
+                  </div>
+                )}
+
+                <div style={{ fontSize: 12.5, fontWeight: 700, color: "rgba(7,22,55,0.55)" }}>
+                  {formData.role === "COMPANY"
+                    ? "Lưu ý: tài khoản Công ty có thể cần Admin duyệt để dùng đầy đủ tính năng."
+                    : " "}
+                </div>
+              </div>
+            </div>
+
+            {/* Actions: nằm ngoài khung trắng, cố định gần cuối, không cuộn */}
+            <div style={{ flex: "0 0 auto", paddingTop: 12 }}>
+              <div className="authForm-actions">
+                <button className="authForm-btn authForm-btnPrimary" onClick={handleRegister} disabled={loading}>
+                  {loading ? "Đang xử lý..." : "Đăng ký tài khoản"}
+                </button>
+
+                <button
+                  className="authForm-btn authForm-btnGhost"
+                  onClick={() => navigate("/auth/login")}
+                  disabled={loading}
+                >
+                  Đã có tài khoản? Đăng nhập
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

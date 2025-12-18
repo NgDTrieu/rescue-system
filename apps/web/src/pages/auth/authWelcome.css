@@ -1,0 +1,203 @@
+/* apps/web/src/pages/auth/authWelcome.css
+   ✅ Bản clean (không trùng lặp), spacing “thoáng” hơn: Greeting (top) -> Logo (center) -> Actions (bottom)
+*/
+
+.aw2 {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+
+  /* fallback nếu layer nền chưa render */
+  background: linear-gradient(180deg, #7ea6f7 0%, #88d6ea 55%, #9af4ef 100%);
+}
+
+/* ===== Background layers ===== */
+.aw2-bg,
+.aw2-triangles,
+.aw2-sparkle {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.aw2-bg {
+  background: linear-gradient(180deg, #7ea6f7 0%, #88d6ea 55%, #9af4ef 100%);
+}
+
+/* hoạ tiết tam giác + đường chéo mờ */
+.aw2-triangles {
+  opacity: 0.22;
+  background:
+    linear-gradient(115deg, rgba(255,255,255,0.22) 0 2px, transparent 2px 100%),
+    linear-gradient(115deg, rgba(255,255,255,0.18) 0 2px, transparent 2px 100%),
+    linear-gradient(115deg, rgba(255,255,255,0.12) 0 2px, transparent 2px 100%);
+  background-size: 160px 160px, 220px 220px, 300px 300px;
+  background-position: 20px 0, -40px 60px, 80px 120px;
+  mix-blend-mode: soft-light;
+}
+
+/* tam giác rỗng điểm nhấn */
+.aw2-triangles::before {
+  content: "";
+  position: absolute;
+  inset: -40px;
+  opacity: 0.28;
+  background-image:
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,0.25) 0 2px, transparent 3px),
+    radial-gradient(circle at 78% 28%, rgba(255,255,255,0.22) 0 2px, transparent 3px),
+    radial-gradient(circle at 68% 72%, rgba(255,255,255,0.18) 0 2px, transparent 3px),
+    linear-gradient(135deg, rgba(255,255,255,0.22) 12%, transparent 12% 88%, rgba(255,255,255,0.22) 88%),
+    linear-gradient(225deg, rgba(255,255,255,0.18) 12%, transparent 12% 88%, rgba(255,255,255,0.18) 88%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 220px 220px, 220px 220px;
+  background-position: 0 0, 0 0, 0 0, 20px 10px, 60px 80px;
+  mask-image: radial-gradient(circle at 50% 30%, rgba(0,0,0,1), rgba(0,0,0,0.35) 65%, rgba(0,0,0,0) 100%);
+}
+
+/* sparkle góc phải dưới */
+.aw2-sparkle {
+  inset: auto 22px 20px auto;
+  width: 56px;
+  height: 56px;
+  opacity: 0.35;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,1) 0 3px, transparent 4px),
+    radial-gradient(circle at 70% 60%, rgba(255,255,255,1) 0 2px, transparent 3px),
+    radial-gradient(circle at 50% 80%, rgba(255,255,255,1) 0 2px, transparent 3px);
+}
+
+/* ===== Content layout: grid để cân đối, không bị “dính” nhau ===== */
+.aw2-content {
+  position: relative;
+  z-index: 1;
+  height: 85%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 44px 22px 22px;
+  gap: 16px;
+}
+
+/* Ép font để không lỗi chữ Việt trong button */
+.aw2,
+.aw2 * {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== Greeting ===== */
+.aw3-head {
+  display: grid;
+  justify-items: center;
+}
+
+.aw3-greeting {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 950;
+  line-height: 1.08;
+  letter-spacing: 0.2px;
+
+  /* gradient chữ trẻ trung */
+  background: linear-gradient(90deg, #0b2f6f 0%, #0b4fcf 45%, #0b2f6f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  /* tạo độ nổi nhẹ */
+  text-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== Logo ở giữa ===== */
+.aw3-logoArea {
+  display: grid;
+  place-items: center;
+  min-height: 0px;          /* quan trọng: không giữ cứng chiều cao */
+  padding: 0px 0 0px;     /* tạo khoảng cách vừa phải */
+}
+
+
+.aw3-logo {
+  width: 145px;
+  height: 145px;
+  object-fit: contain;
+
+  /* tạo khoảng thoáng: không sát chữ trên/dưới */
+  margin: 8px 0 6px;
+
+  /* nổi nhẹ mà không tạo nền trắng */
+  filter: drop-shadow(0 16px 26px rgba(0,0,0,0.20));
+}
+
+/* ===== Actions ===== */
+.aw2-actions {
+  display: grid;
+  gap: 14px;
+  padding: 6px 0 0;
+}
+
+/* Buttons */
+.aw2-btn {
+  height: 56px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: grid;
+  place-items: center;
+
+  font-size: 16px;
+  font-weight: 850;
+  letter-spacing: 0.2px;
+
+  transition: transform 0.06s ease, filter 0.2s ease;
+}
+.aw2-btn:active { transform: scale(0.992); }
+
+.aw2-primary {
+  color: #fff;
+  background: linear-gradient(180deg, #2c79ff 0%, #1b5fd8 100%);
+  box-shadow: 0 18px 30px rgba(28, 95, 216, 0.28);
+}
+
+.aw2-leftIcon {
+  position: absolute;
+  left: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.95);
+}
+
+.aw2-outline {
+  background: rgba(255,255,255,0.70);
+  color: #1a5bd0;
+  border: 2px solid rgba(26, 91, 208, 0.45);
+  box-shadow: 0 14px 24px rgba(0,0,0,0.10);
+}
+
+.aw2-rightIcon {
+  position: absolute;
+  right: 16px;
+  color: #1a5bd0;
+}
+
+.aw2-hint {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(7, 22, 55, 0.40);
+  padding-top: 2px;
+}
+
+/* ===== Responsive cho màn thấp (không bị “dính”/tràn) ===== */
+@media (max-height: 0px) {
+  .aw2-content { padding-top: 34px; gap: 12px; }
+  .aw3-greeting { font-size: 24px; }
+  .aw3-logoArea { min-height: 0px; }
+  .aw3-logo { width: 130px; height: 130px; margin: 0px 0 0px; }
+  .aw2-btn { height: 52px; }
+}
