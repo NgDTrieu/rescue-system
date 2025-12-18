@@ -13,6 +13,7 @@ import adminRoutes from "./modules/admin/admin.routes";
 import companyRoutes from "./modules/company/company.routes";
 import requestRoutes from "./modules/requests/request.routes";
 import categoryRoutes from "./modules/categories/category.routes";
+import companiesRoutes from "./modules/companies/companies.routes";
 
 
 
@@ -28,6 +29,7 @@ app.use("/admin", adminRoutes);
 app.use("/company", companyRoutes);
 app.use("/requests", requestRoutes);
 app.use("/categories", categoryRoutes);
+app.use("/companies", companiesRoutes);
 app.get("/health", (_req, res) => res.json({ ok: true, ts: Date.now() }));
 
 

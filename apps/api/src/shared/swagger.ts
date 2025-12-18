@@ -124,10 +124,13 @@ export const swaggerSpec = swaggerJSDoc({
         },
         CreateRescueRequest: {
           type: "object",
-          required: ["issueType", "contactName", "contactPhone", "lat", "lng"],
+          required: ["categoryId", "companyId", "issueType", "contactName", "contactPhone", "lat", "lng"],
           properties: {
-            issueType: { type: "string", example: "Thủng lốp" },
-            note: { type: "string", example: "Đang đứng ở lề phải" },
+            categoryId: { type: "string", example: "694172f653474057be6a91f9" },
+            companyId: { type: "string", example: "693d8fc1c7ea540a307ca95e" },
+
+            issueType: { type: "string", example: "Hết xăng" },
+            note: { type: "string", example: "Xe máy hết xăng, cần hỗ trợ" },
             contactName: { type: "string", example: "Khách 1" },
             contactPhone: { type: "string", example: "0900000000" },
             lat: { type: "number", example: 21.028 },
@@ -153,6 +156,9 @@ export const swaggerSpec = swaggerJSDoc({
                 lng: { type: "number", example: 105.834 },
               },
             },
+            assignedCompanyId: { type: "string", example: "693d8fc1c7ea540a307ca95e" },
+            categoryId: { type: "string", example: "694172f653474057be6a91f9" },
+            quotedBasePrice: { type: "number", example: 80000 },
             createdAt: { type: "string", example: "2025-12-13T12:00:00.000Z" },
           },
         },
@@ -214,6 +220,34 @@ export const swaggerSpec = swaggerJSDoc({
               items: { $ref: "#/components/schemas/CompanyServiceInput" },
             },
             updatedAt: { type: "string", example: "2025-12-16T12:00:00.000Z" },
+          },
+        },
+        CompanySuggestItem: {
+          type: "object",
+          properties: {
+            id: { type: "string", example: "693d..." },
+            companyName: { type: "string", example: "Cứu hộ ABC" },
+            phone: { type: "string", example: "0911111111" },
+            distanceKm: { type: "number", example: 2.35 },
+            basePrice: { type: "number", example: 80000 },
+            location: {
+              type: "object",
+              properties: {
+                lat: { type: "number", example: 21.028 },
+                lng: { type: "number", example: 105.834 },
+              },
+            },
+          },
+        },
+
+        CompanySuggestResponse: {
+          type: "object",
+          properties: {
+            count: { type: "number", example: 1 },
+            items: {
+              type: "array",
+              items: { $ref: "#/components/schemas/CompanySuggestItem" },
+            },
           },
         },
 

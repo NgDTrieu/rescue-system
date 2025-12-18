@@ -3,6 +3,9 @@ import { authGuard } from "../../middlewares/authGuard";
 import { requireRole } from "../../middlewares/requireRole";
 import { requireCompanyActive } from "../../middlewares/requireCompanyActive";
 import { updateCompanyProfile } from "./company.controller";
+import { listAssignedRequests } from "./company.requests.controller";
+import { updateEta } from "./company.eta.controller";
+
 
 const router = Router();
 
@@ -80,6 +83,80 @@ router.get("/ping", authGuard, requireRole("COMPANY"), requireCompanyActive, (_r
  */
 router.patch("/profile", authGuard, requireRole("COMPANY"), requireCompanyActive, updateCompanyProfile);
 
+/**
+ * @openapi
+ * /company/requests:
+ *   get:
+ *     tags: [Company]
+ *     summary: List rescue requests assigned to this company
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [PENDING, ASSIGNED, IN_PROGRESS, COMPLETED, CANCELLED]
+ *         example: PENDING
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden (COMPANY must be ACTIVE)
+ */
+router.get(
+  "/requests",
+  authGuard,
+  requireRole("COMPANY"),
+  requireCompanyActive,
+  listAssignedRequests
+);
 
+/**
+ * @openapi
+ * /company/requests/{id}/eta:
+ *   patch:
+ *     tags: [Company]
+ *     summary: Update ETA for an assigned rescue request
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [etaMinutes]
+ *             properties:
+ *               etaMinutes:
+ *                 type: number
+ *                 example: 15
+ *     responses:
+ *       200:
+ *         description: Updated
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden (COMPANY must be ACTIVE)
+ *       404:
+ *         description: Not found
+ */
+router.patch(
+  "/requests/:id/eta",
+  authGuard,
+  requireRole("COMPANY"),
+  requireCompanyActive,
+  updateEta
+);
 
 export default router;

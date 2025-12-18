@@ -32,6 +32,12 @@ export interface IRescueRequest extends Document {
 
   createdAt: Date;
   updatedAt: Date;
+
+  categoryId: Types.ObjectId;
+  quotedBasePrice: number; // giá cơ bản chốt tại thời điểm đặt
+
+  etaMinutes?: number;
+
 }
 
 const RescueRequestSchema = new Schema<IRescueRequest>(
@@ -56,8 +62,11 @@ const RescueRequestSchema = new Schema<IRescueRequest>(
       default: "PENDING",
       required: true,
     },
+    categoryId: { type: Schema.Types.ObjectId, ref: "ServiceCategory", required: true },
+    quotedBasePrice: { type: Number, required: true, min: 0 },
+    assignedCompanyId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    etaMinutes: { type: Number, min: 0 },
 
-    assignedCompanyId: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
