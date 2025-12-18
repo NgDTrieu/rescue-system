@@ -320,6 +320,11 @@ export const swaggerSpec = swaggerJSDoc({
             customerRating: { type: "number", nullable: true, example: 5 },
             customerReview: { type: "string", nullable: true, example: "Đến nhanh, hỗ trợ tốt" },
 
+            cancelReason: { type: "string", nullable: true, example: "Tôi đã tự xử lý được" },
+            cancelledAt: { type: "string", nullable: true, example: "2025-12-18T10:05:00.000Z" },
+            cancelledBy: { type: "string", nullable: true, example: "CUSTOMER" },
+
+
           },
         },
 

@@ -4,6 +4,8 @@ import { requireRole } from "../../middlewares/requireRole";
 import { createRequest } from "./request.controller";
 import { listMyRequests, getMyRequestDetail } from "./request.query.controller";
 import { confirmAndReview } from "./request.confirm.controller";
+import { cancelMyRequest } from "./request.cancel.controller";
+
 
 
 const router = Router();
@@ -77,10 +79,10 @@ router.get("/my", authGuard, requireRole("CUSTOMER"), listMyRequests);
 
 /**
  * @openapi
- * /requests/{id}:
- *   get:
+ * /requests/{id}/cancel:
+ *   patch:
  *     tags: [Requests]
- *     summary: Get my rescue request detail (CUSTOMER)
+ *     summary: Cancel my rescue request with a reason (CUSTOMER)
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -88,21 +90,27 @@ router.get("/my", authGuard, requireRole("CUSTOMER"), listMyRequests);
  *         name: id
  *         required: true
  *         schema: { type: string }
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reason:
+ *                 type: string
+ *                 example: "Tôi đã tự xử lý được"
  *     responses:
  *       200:
- *         description: Success
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/MyRequestDetailResponse"
+ *         description: Cancelled
+ *       400:
+ *         description: Cannot cancel (already completed/cancelled)
+ *       401:
+ *         description: Unauthorized
  *       404:
  *         description: Not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: "#/components/schemas/ErrorResponse"
  */
-router.get("/:id", authGuard, requireRole("CUSTOMER"), getMyRequestDetail);
+router.patch("/:id/cancel", authGuard, requireRole("CUSTOMER"), cancelMyRequest);
 
 /**
  * @openapi
@@ -142,6 +150,37 @@ router.get("/:id", authGuard, requireRole("CUSTOMER"), getMyRequestDetail);
  *         description: Not found
  */
 router.patch("/:id/confirm", authGuard, requireRole("CUSTOMER"), confirmAndReview);
+
+/**
+ * @openapi
+ * /requests/{id}:
+ *   get:
+ *     tags: [Requests]
+ *     summary: Get my rescue request detail (CUSTOMER)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/MyRequestDetailResponse"
+ *       404:
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/ErrorResponse"
+ */
+router.get("/:id", authGuard, requireRole("CUSTOMER"), getMyRequestDetail);
+
+
 
 
 export default router;

@@ -43,6 +43,11 @@ export interface IRescueRequest extends Document {
   customerConfirmedAt?: Date;
   completedAt?: Date;
 
+  cancelReason?: string;
+  cancelledAt?: Date;
+  cancelledBy?: "CUSTOMER" | "COMPANY" | "ADMIN";
+
+
 
 }
 
@@ -78,6 +83,10 @@ const RescueRequestSchema = new Schema<IRescueRequest>(
 
     customerRating: { type: Number, min: 1, max: 5 },
     customerReview: { type: String, trim: true },
+
+    cancelReason: { type: String, trim: true },
+    cancelledAt: { type: Date },
+    cancelledBy: { type: String, enum: ["CUSTOMER", "COMPANY", "ADMIN"] },
 
 
   },

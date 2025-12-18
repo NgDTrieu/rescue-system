@@ -79,5 +79,9 @@ export async function getMyRequestDetail(req: Request, res: Response) {
     customerRating: r.customerRating ?? null,
     customerReview: r.customerReview ?? null,
 
+    cancelReason: r.cancelReason ?? null,
+    cancelledAt: r.cancelledAt ?? null,
+    cancelledBy: r.cancelledBy ?? null,
+
   });
 }

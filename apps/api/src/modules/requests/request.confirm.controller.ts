@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { RescueRequestModel } from "./request.model";
+import { getIO } from "../../shared/realtime";
 
 export async function confirmAndReview(req: Request, res: Response) {
   const customerId = (req as any).user?.sub;
@@ -28,6 +29,13 @@ export async function confirmAndReview(req: Request, res: Response) {
   doc.customerConfirmedAt = new Date();
 
   await doc.save();
+
+  getIO().to(`user:${String(doc.assignedCompanyId)}`).emit("request:confirmed", {
+    requestId: String(doc._id),
+    rating: doc.customerRating,
+    review: doc.customerReview ?? null,
+    customerConfirmedAt: doc.customerConfirmedAt,
+  });
 
   return res.json({
     id: doc._id,

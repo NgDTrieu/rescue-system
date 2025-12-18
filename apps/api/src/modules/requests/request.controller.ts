@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Types } from "mongoose";
 import { RescueRequestModel } from "./request.model";
 import { UserModel } from "../users/user.model";
+import { getIO } from "../../shared/realtime"; 
 
 export async function createRequest(req: Request, res: Response) {
   const customerId = (req as any).user?.sub;
@@ -78,6 +79,22 @@ export async function createRequest(req: Request, res: Response) {
     location: { type: "Point", coordinates: [lngNum, latNum] },
 
     status: "PENDING",
+  });
+
+  getIO().to(`user:${String(companyId)}`).emit("request:new", {
+    requestId: String(doc._id),
+    status: doc.status,
+    categoryId: String(doc.categoryId),
+    quotedBasePrice: doc.quotedBasePrice,
+    issueType: doc.issueType,
+    addressText: doc.addressText,
+    createdAt: doc.createdAt,
+  });
+
+  // (tuỳ chọn) gửi lại cho chính customer để UI update realtime
+  getIO().to(`user:${String(customerId)}`).emit("request:created", {
+    requestId: String(doc._id),
+    status: doc.status,
   });
 
   return res.status(201).json({

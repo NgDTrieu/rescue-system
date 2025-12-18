@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { RescueRequestModel } from "../requests/request.model";
+import { getIO } from "../../shared/realtime";
 
 export async function updateEta(req: Request, res: Response) {
   const companyId = (req as any).user?.sub;
@@ -34,6 +35,13 @@ export async function updateEta(req: Request, res: Response) {
   }
 
   await reqDoc.save();
+
+  getIO().to(`user:${String(reqDoc.customerId)}`).emit("request:eta", {
+    requestId: String(reqDoc._id),
+    status: reqDoc.status,
+    etaMinutes: reqDoc.etaMinutes,
+    updatedAt: reqDoc.updatedAt,
+  });
 
   return res.json({
     id: reqDoc._id,

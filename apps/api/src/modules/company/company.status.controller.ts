@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { RescueRequestModel } from "../requests/request.model";
+import { getIO } from "../../shared/realtime";
 
 const ALLOWED: Record<string, string[]> = {
   ASSIGNED: ["IN_PROGRESS"],
@@ -34,6 +35,13 @@ export async function updateRequestStatus(req: Request, res: Response) {
   }
 
   await doc.save();
+
+  getIO().to(`user:${String(doc.customerId)}`).emit("request:status", {
+    requestId: String(doc._id),
+    status: doc.status,
+    completedAt: doc.completedAt ?? null,
+    updatedAt: doc.updatedAt,
+  });
 
   return res.json({
     id: doc._id,
