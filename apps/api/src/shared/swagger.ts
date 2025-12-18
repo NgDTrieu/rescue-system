@@ -250,6 +250,78 @@ export const swaggerSpec = swaggerJSDoc({
             },
           },
         },
+        MyRequestListItem: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            status: { type: "string", example: "ASSIGNED" },
+            categoryId: { type: "string" },
+            assignedCompanyId: { type: "string" },
+            quotedBasePrice: { type: "number", example: 80000 },
+            etaMinutes: { type: "number", nullable: true, example: 15 },
+            issueType: { type: "string", example: "Hết xăng" },
+            addressText: { type: "string", example: "Gần Hồ Gươm" },
+            createdAt: { type: "string" },
+          },
+        },
+
+        MyRequestListResponse: {
+          type: "object",
+          properties: {
+            count: { type: "number", example: 1 },
+            items: {
+              type: "array",
+              items: { $ref: "#/components/schemas/MyRequestListItem" },
+            },
+          },
+        },
+
+        MyRequestDetailResponse: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            status: { type: "string", example: "ASSIGNED" },
+            category: {
+              type: "object",
+              properties: {
+                id: { type: "string" },
+                key: { type: "string", example: "FUEL" },
+                name: { type: "string", example: "Cứu hộ hết xăng" },
+              },
+            },
+            company: {
+              type: "object",
+              properties: {
+                id: { type: "string" },
+                companyName: { type: "string", example: "Cứu hộ ABC" },
+                phone: { type: "string", example: "0911111111" },
+                companyStatus: { type: "string", example: "ACTIVE" },
+              },
+            },
+            quotedBasePrice: { type: "number", example: 80000 },
+            etaMinutes: { type: "number", nullable: true, example: 15 },
+            issueType: { type: "string", example: "Hết xăng" },
+            note: { type: "string", nullable: true },
+            contactName: { type: "string" },
+            contactPhone: { type: "string" },
+            addressText: { type: "string", nullable: true },
+            location: {
+              type: "object",
+              nullable: true,
+              properties: {
+                lat: { type: "number" },
+                lng: { type: "number" },
+              },
+            },
+            createdAt: { type: "string" },
+            updatedAt: { type: "string" },
+            completedAt: { type: "string", nullable: true, example: "2025-12-18T10:00:00.000Z" },
+            customerConfirmedAt: { type: "string", nullable: true, example: "2025-12-18T10:05:00.000Z" },
+            customerRating: { type: "number", nullable: true, example: 5 },
+            customerReview: { type: "string", nullable: true, example: "Đến nhanh, hỗ trợ tốt" },
+
+          },
+        },
 
       },
     },

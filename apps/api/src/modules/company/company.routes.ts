@@ -5,6 +5,10 @@ import { requireCompanyActive } from "../../middlewares/requireCompanyActive";
 import { updateCompanyProfile } from "./company.controller";
 import { listAssignedRequests } from "./company.requests.controller";
 import { updateEta } from "./company.eta.controller";
+import { updateRequestStatus } from "./company.status.controller";
+import { companyRequestHistory } from "./company.history.controller";
+
+
 
 
 const router = Router();
@@ -158,5 +162,83 @@ router.patch(
   requireCompanyActive,
   updateEta
 );
+
+/**
+ * @openapi
+ * /company/requests/{id}/status:
+ *   patch:
+ *     tags: [Company]
+ *     summary: Update status for an assigned rescue request
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [status]
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [IN_PROGRESS, COMPLETED]
+ *                 example: IN_PROGRESS
+ *     responses:
+ *       200:
+ *         description: Updated
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Not found
+ */
+router.patch(
+  "/requests/:id/status",
+  authGuard,
+  requireRole("COMPANY"),
+  requireCompanyActive,
+  updateRequestStatus
+);
+
+/**
+ * @openapi
+ * /company/requests/history:
+ *   get:
+ *     tags: [Company]
+ *     summary: Company request history (includes rating/review)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [ASSIGNED, IN_PROGRESS, COMPLETED, CANCELLED]
+ *         example: COMPLETED
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema: { type: number, default: 20 }
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+router.get(
+  "/requests/history",
+  authGuard,
+  requireRole("COMPANY"),
+  requireCompanyActive,
+  companyRequestHistory
+);
+
 
 export default router;

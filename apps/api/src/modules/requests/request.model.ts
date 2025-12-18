@@ -38,6 +38,12 @@ export interface IRescueRequest extends Document {
 
   etaMinutes?: number;
 
+  customerRating?: number;
+  customerReview?: string;
+  customerConfirmedAt?: Date;
+  completedAt?: Date;
+
+
 }
 
 const RescueRequestSchema = new Schema<IRescueRequest>(
@@ -66,6 +72,13 @@ const RescueRequestSchema = new Schema<IRescueRequest>(
     quotedBasePrice: { type: Number, required: true, min: 0 },
     assignedCompanyId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     etaMinutes: { type: Number, min: 0 },
+
+    completedAt: { type: Date },
+    customerConfirmedAt: { type: Date },
+
+    customerRating: { type: Number, min: 1, max: 5 },
+    customerReview: { type: String, trim: true },
+
 
   },
   { timestamps: true }
