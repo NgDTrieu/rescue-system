@@ -8,26 +8,42 @@ import RescueNewLocation from "./pages/customer/rescue/RescueNewLocation";
 import RescueNewCompanies from "./pages/customer/rescue/RescueNewCompanies";
 import RescueNewConfirm from "./pages/customer/rescue/RescueNewConfirm";
 import RescueNewSuccess from "./pages/customer/rescue/RescueNewSuccess";
-
+import CompanyRequestsPending from "./pages/company/CompanyRequestsPending";
+import CompanyRequestDetail from "./pages/company/CompanyRequestDetail";
+import CompanyRequestsInProgress from "./pages/company/CompanyRequestsInProgress";
+import CompanyRequestsToday from "./pages/company/CompanyRequestsToday";
+import CompanyFeedback from "./pages/company/CompanyFeedback.tsx";
+import CompanyRequestsAll from "./pages/company/CompanyRequestsAll";
 
 
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<AuthWelcome />} />
+      <Route path="/home" element={<Home />} />
+
       <Route path="/auth" element={<AuthWelcome />} />
       <Route path="/auth/login" element={<Login />} />
       <Route path="/auth/register" element={<Register />} />
+
       <Route path="/customer/rescue/new" element={<RescueNewSelectCategory />} />
       <Route path="/customer/rescue/new/location" element={<RescueNewLocation />} />
       <Route path="/customer/rescue/new/companies" element={<RescueNewCompanies />} />
       <Route path="/customer/rescue/new/confirm" element={<RescueNewConfirm />} />
       <Route path="/customer/rescue/new/success" element={<RescueNewSuccess />} />
 
+      {/* COMPANY: routes tĩnh trước */}
+      <Route path="/company/requests/pending" element={<CompanyRequestsPending />} />
+      <Route path="/company/requests/in-progress" element={<CompanyRequestsInProgress />} />
+      <Route path="/company/requests/today" element={<CompanyRequestsToday />} />
+      <Route path="/company/feedback" element={<CompanyFeedback />} />
+      <Route path="/company/requests" element={<CompanyRequestsAll />} />
 
 
-
+      {/* COMPANY: route động để cuối */}
+      <Route path="/company/requests/:id" element={<CompanyRequestDetail />} />
     </Routes>
+
   );
 }

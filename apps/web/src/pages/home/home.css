@@ -523,3 +523,209 @@
   color: rgba(11,23,54,0.90);
   text-align: right;
 }
+.detailGrid{
+  display: grid;
+  gap: 8px;
+}
+
+.detailRow{
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(11,23,54,0.06);
+}
+.detailRow:last-child{ border-bottom: none; }
+
+.detailKey{
+  font-size: 12px;
+  font-weight: 850;
+  color: rgba(11,23,54,0.55);
+}
+.detailVal{
+  font-size: 12px;
+  font-weight: 850;
+  color: rgba(11,23,54,0.92);
+  text-align: right;
+}
+
+.etaQuick{
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.etaChip{
+  border: 2px solid rgba(44,121,255,0.25);
+  background: rgba(44,121,255,0.08);
+  color: #2c79ff;
+  border-radius: 999px;
+  padding: 8px 10px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.etaRow{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.etaUnit{
+  font-size: 12px;
+  font-weight: 900;
+  color: rgba(11,23,54,0.6);
+  padding-right: 6px;
+}
+
+/* đảm bảo StatCard full width như div trước đây */
+.stat,
+.stat-btn {
+  width: 100%;
+  display: block;
+}
+
+/* reset style mặc định của button */
+.stat-btn {
+  border: 0;
+  background: transparent;
+  padding: 0;          /* để giữ padding do .stat cung cấp */
+  margin: 0;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+/* nếu parent là grid và có justify-items:center thì ép lại */
+.statsGrid, .stats, .statsRow {
+  justify-items: stretch;
+}
+
+/* nếu .stat đang là inline-flex/fit-content thì ép lại */
+.stat {
+  box-sizing: border-box;
+}
+
+.ratingRow{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.ratingStars{
+  display: flex;
+  gap: 4px;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.star{
+  color: rgba(11,23,54,0.18);
+  text-shadow: 0 6px 12px rgba(0,0,0,0.06);
+}
+
+.star.on{
+  color: #2c79ff; /* xanh nước biển hơn cho hợp theme */
+}
+
+.ratingNum{
+  font-size: 12px;
+  font-weight: 950;
+  color: rgba(11,23,54,0.75);
+  background: rgba(44,121,255,0.10);
+  border: 2px solid rgba(44,121,255,0.22);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+.reviewBox{
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(11,23,54,0.10);
+  background: rgba(255,255,255,0.90);
+  font-weight: 750;
+  color: rgba(11,23,54,0.80);
+}
+/* average card */
+.avgRow{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.avgNum{
+  font-size: 34px;
+  font-weight: 1000;
+  color: rgba(11,23,54,0.92);
+  line-height: 1;
+}
+
+/* stars & review */
+.ratingStars{
+  display: flex;
+  gap: 4px;
+  font-size: 18px;
+  line-height: 1;
+}
+.star{
+  color: rgba(11,23,54,0.18);
+}
+.star.on{
+  color: #2c79ff;
+}
+.reviewBox{
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(11,23,54,0.10);
+  background: rgba(255,255,255,0.90);
+  font-weight: 750;
+  color: rgba(11,23,54,0.80);
+}
+
+/* feedback list */
+.feedbackList{
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+}
+.feedbackCard{
+  border: 2px solid rgba(11,23,54,0.08);
+  background: rgba(255,255,255,0.96);
+  border-radius: 16px;
+  padding: 12px;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 0 10px 18px rgba(0,0,0,0.05);
+}
+.feedbackTop{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.feedbackName{
+  font-size: 13px;
+  font-weight: 950;
+  color: rgba(11,23,54,0.9);
+  margin-bottom: 6px;
+}
+.feedbackDate{
+  font-size: 12px;
+  font-weight: 850;
+  color: rgba(11,23,54,0.55);
+  text-align: right;
+}
+.statusSelect{
+  border: 2px solid rgba(11,23,54,0.10);
+  background: rgba(255,255,255,0.9);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-weight: 850;
+  color: rgba(11,23,54,0.8);
+}
+

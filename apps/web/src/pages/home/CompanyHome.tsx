@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import AppShell from "./AppShell";
 import BottomNav from "./BottomNav";
 import "./home.css";
+import { useNavigate } from "react-router-dom"; // thêm ở đầu file
 
 type CompanyRequest = {
   id: string;
@@ -27,21 +28,30 @@ function StatCard({
   label,
   value,
   icon,
+  onClick,
 }: {
   label: string;
   value: number;
   icon: React.ReactNode;
+  onClick?: () => void;
 }) {
   return (
-    <div className="stat">
+    <button
+      type="button"
+      className="stat stat-btn"
+      onClick={onClick}
+      style={{ cursor: onClick ? "pointer" : "default" }}
+      aria-label={label}
+    >
       <div className="stat-top">
         <div className="stat-ico">{icon}</div>
         <div className="stat-val">{value}</div>
       </div>
       <div className="stat-lbl">{label}</div>
-    </div>
+    </button>
   );
 }
+
 
 function ManageTile({
   label,
@@ -61,6 +71,7 @@ function ManageTile({
 }
 
 export default function CompanyHome() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState("home");
 
   const raw = localStorage.getItem("user");
@@ -145,12 +156,22 @@ export default function CompanyHome() {
   };
 
   useEffect(() => {
-    refreshStats();
-    // Optional: nếu muốn auto refresh mỗi 10s
-    // const t = setInterval(refreshStats, 10000);
-    // return () => clearInterval(t);
+    if (!isActive) return;
+
+    refreshStats(); // lần đầu
+    const t = setInterval(refreshStats, 15000); // 15 giây
+    return () => clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isActive]);
+
+  const handleNav = (key: string) => {
+    setTab(key);
+
+    if (key === "requests") navigate("/company/requests");
+    if (key === "home") navigate("/home");
+
+    // các key khác nếu company chưa dùng thì cứ để sau
+  };
 
   return (
     <AppShell>
@@ -236,13 +257,16 @@ export default function CompanyHome() {
                 </button>
               </div>
 
-              <button className="dash-btn">Xem ngay</button>
+              <button className="dash-btn" onClick={() => navigate("/company/requests/pending")}>
+                Xem ngay
+              </button>
 
               <div className="stat-row">
                 <StatCard
                   label="Đang xử lý"
                   value={loadingStats ? 0 : inProgressCount}
                   icon={<span className="miniDot" />}
+                  onClick={() => navigate("/company/requests/in-progress")}
                 />
                 <StatCard
                   label="Hoàn thành hôm nay"
@@ -258,6 +282,7 @@ export default function CompanyHome() {
                       />
                     </svg>
                   }
+                  onClick={() => navigate("/company/requests/today")}
                 />
               </div>
             </div>
@@ -276,6 +301,7 @@ export default function CompanyHome() {
                     <path d="M7 7h10M7 12h10M7 17h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                   </svg>
                 }
+                onClick={() => navigate("/company/requests/in-progress")}
               />
 
               {/* đổi “Nhắn tin khách hàng” -> “Cập nhật thông tin” */}
@@ -308,6 +334,7 @@ export default function CompanyHome() {
                     />
                   </svg>
                 }
+                onClick={() => navigate("/company/feedback")}
               />
 
               {/* đổi “Quản lý thông tin” -> “Lịch sử yêu cầu” */}
@@ -327,14 +354,16 @@ export default function CompanyHome() {
                       strokeWidth="2"
                     />
                   </svg>
+                  
                 }
+                onClick={() => navigate("/company/requests/today")}
               />
             </div>
           </>
         )}
       </div>
 
-      <BottomNav activeKey={tab} onChange={setTab} />
+      <BottomNav activeKey={tab} onChange={handleNav} />
     </AppShell>
   );
 }

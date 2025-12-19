@@ -81,16 +81,6 @@ export async function createRequest(req: Request, res: Response) {
     status: "PENDING",
   });
 
-  getIO().to(`user:${String(companyId)}`).emit("request:new", {
-    requestId: String(doc._id),
-    status: doc.status,
-    categoryId: String(doc.categoryId),
-    quotedBasePrice: doc.quotedBasePrice,
-    issueType: doc.issueType,
-    addressText: doc.addressText,
-    createdAt: doc.createdAt,
-  });
-
   return res.status(201).json({
     id: doc._id,
     status: doc.status,

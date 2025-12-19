@@ -7,6 +7,8 @@ import { listAssignedRequests } from "./company.requests.controller";
 import { updateEta } from "./company.eta.controller";
 import { updateRequestStatus } from "./company.status.controller";
 import { companyRequestHistory } from "./company.history.controller";
+import { getAssignedRequestDetail } from "./company.detail.controller";
+
 
 
 
@@ -118,6 +120,38 @@ router.get(
   requireCompanyActive,
   listAssignedRequests
 );
+
+/**
+ * @openapi
+ * /company/requests/{id}:
+ *   get:
+ *     tags: [Company]
+ *     summary: Get detail of a rescue request assigned to this company
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string }
+ *     responses:
+ *       200:
+ *         description: Success
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Not found
+ */
+router.get(
+  "/requests/:id",
+  authGuard,
+  requireRole("COMPANY"),
+  requireCompanyActive,
+  getAssignedRequestDetail
+);
+
 
 /**
  * @openapi

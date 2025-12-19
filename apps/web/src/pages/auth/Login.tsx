@@ -39,7 +39,7 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(data.user));
 
       // ✅ connect socket ngay sau khi có accessToken
-      connectSocket(data.accessToken);
+      // connectSocket(data.accessToken);
 
       // logic companyStatus bạn đã có
       if (data.user.role === "COMPANY" && data.user.companyStatus !== "ACTIVE") {
@@ -48,7 +48,7 @@ export default function Login() {
         );
       }
 
-      navigate("/");
+      navigate("/home");
     } catch (err: any) {
       setError(err.message);
     } finally {
