@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authGuard } from "../../middlewares/authGuard";
 import { register, login, me } from "./auth.controller";
+import { logout } from "./auth.controller";
 
 const router = Router();
 
@@ -107,6 +108,21 @@ router.post("/login", login);
  *               $ref: "#/components/schemas/ErrorResponse"
  */
 router.get("/me", authGuard, me);
+
+
+/**
+ * @openapi
+ * /auth/logout:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Logout (stateless JWT - client should delete token)
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Logged out
+ */
+router.post("/logout", authGuard, logout);
 
 
 

@@ -3,6 +3,7 @@ import { UserModel } from "../users/user.model";
 import { hashPassword } from "../../shared/password";
 import { comparePassword } from "../../shared/password";
 import { signAccessToken } from "../../shared/jwt";
+import { Request, Response } from "express";
 
 export async function register(req: Request, res: Response) {
   const { email, password, role, name, phone, companyName } = req.body;
@@ -118,4 +119,10 @@ export async function me(req: any, res: any) {
     companyStatus: user.companyStatus,
     createdAt: user.createdAt,
   });
+}
+
+export async function logout(_req: Request, res: Response) {
+  // JWT stateless: backend không giữ session để "xoá"
+  // Sau này nếu có refresh token cookie -> clear tại đây
+  return res.json({ message: "Logged out" });
 }

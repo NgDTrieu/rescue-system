@@ -15,6 +15,7 @@ import CompanyRequestsToday from "./pages/company/CompanyRequestsToday";
 import CompanyFeedback from "./pages/company/CompanyFeedback.tsx";
 import CompanyRequestsAll from "./pages/company/CompanyRequestsAll";
 import CompanyUpdateProfile from "./pages/company/CompanyUpdateProfile";
+import CompanyAccount from "./pages/company/CompanyAccount";
 
 
 
@@ -27,6 +28,8 @@ export default function App() {
       <Route path="/auth" element={<AuthWelcome />} />
       <Route path="/auth/login" element={<Login />} />
       <Route path="/auth/register" element={<Register />} />
+      <Route path="/company/account" element={<CompanyAccount />} />
+
 
       <Route path="/customer/rescue/new" element={<RescueNewSelectCategory />} />
       <Route path="/customer/rescue/new/location" element={<RescueNewLocation />} />

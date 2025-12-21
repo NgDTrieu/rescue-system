@@ -83,6 +83,7 @@ export default function CompanyRequestsInProgress() {
     setTab(key);
     if (key === "home") navigate("/home");
     if (key === "requests") navigate("/company/requests");
+    if (key === "account") navigate ("/company/account");
   };
 
   return (

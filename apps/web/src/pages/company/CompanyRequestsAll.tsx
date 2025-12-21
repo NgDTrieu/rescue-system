@@ -96,6 +96,7 @@ export default function CompanyRequestsAll() {
     if (key === "home") navigate("/home");
     if (key === "requests") navigate("/company/requests");
     // nếu bạn có thêm key khác cho company thì add ở đây
+    if (key === "account") navigate ("/company/account");
   };
 
   return (

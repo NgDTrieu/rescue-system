@@ -169,7 +169,7 @@ export default function CompanyHome() {
 
     if (key === "requests") navigate("/company/requests");
     if (key === "home") navigate("/home");
-
+    if (key === "account") navigate ("/company/account");
     // các key khác nếu company chưa dùng thì cứ để sau
   };
 
@@ -213,7 +213,9 @@ export default function CompanyHome() {
               </button>
             )}
 
-            <div className="avatar">
+            <div className="avatar"
+              onClick={() => navigate("/company/account")}
+            >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                 <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z" stroke="currentColor" strokeWidth="2" />
                 <path d="M4 20a8 8 0 0 1 16 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
