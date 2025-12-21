@@ -1,229 +1,119 @@
-# Hệ thống cứu hộ xe (Web app mobile-first)
+# 🚗 Hệ thống Cứu Hộ Xe Trên Đường
 
-Nền tảng kết nối **Khách hàng** gặp sự cố với **Công ty cứu hộ**, có **Admin** quản trị & duyệt công ty.
+Đây là **ứng dụng cứu hộ xe trên đường (mobile-first web application)**, giúp kết nối **người tham gia giao thông gặp sự cố** với **các công ty cung cấp dịch vụ cứu hộ** một cách nhanh chóng và hiệu quả.
 
-## Tech Stack
-- Backend: Node.js + Express + TypeScript + Mongoose (MongoDB Atlas)
-- Frontend: React + Vite (mobile-first)
-- Docs: Swagger/OpenAPI (`/docs`)
-- Run (khuyên dùng): Docker Compose
+Hệ thống cho phép:
+- Khách hàng gửi yêu cầu cứu hộ khi xe gặp sự cố trên đường
+- Công ty cứu hộ tiếp nhận và xử lý các yêu cầu
+- Quản trị viên hệ thống quản lý và phê duyệt tài khoản công ty
 
----
-
-## 1) Cấu trúc thư mục
-
-rescue-system/
-apps/
-api/ # Backend (Express + TS + Mongoose)
-src/
-middlewares/ # authGuard, requireRole, requireCompanyActive...
-modules/
-auth/ # /auth/register, /auth/login, /auth/me
-admin/ # /admin/... (duyệt công ty)
-requests/ # nghiệp vụ yêu cầu cứu hộ (UC001, UC003, UC005...)
-company/ # route cho công ty (ping, xử lý yêu cầu...)
-users/ # user.model.ts
-shared/ # db.ts, jwt.ts, password.ts, swagger.ts...
-scripts/ # seedAdmin.ts...
-web/ # Frontend (React + Vite)
-src/
-pages/
-components/
-routes/
-services/ # gọi API (fetch/axios)
-docs/
-usecases.md
-assets/
-uctongquan.png
-ucphanra.png
-docker-compose.dev.yml
-
-yaml
-Copy code
+Ứng dụng đã được cấu hình sẵn, **người sử dụng chỉ cần chỉnh sửa biến môi trường và chạy bằng Docker**.
 
 ---
 
-## 2) Thiết lập môi trường (BẮT BUỘC)
+## 🎯 Đối tượng sử dụng
 
-### 2.1 Backend env
-Copy file mẫu:
+- **Customer**: Người dùng cá nhân gặp sự cố xe trên đường
+- **Company**: Công ty cung cấp dịch vụ cứu hộ
+- **Admin**: Quản trị viên hệ thống
+
+---
+
+## 🧱 Công nghệ sử dụng
+
+- Backend: Node.js + Express + MongoDB
+- Frontend: React + Vite
+- API Documentation: Swagger (OpenAPI)
+- Triển khai & chạy hệ thống: **Docker Compose**
+
+---
+
+## ⚙️ Yêu cầu trước khi chạy
+
+- Đã cài đặt:
+  - Docker Desktop
+- Có sẵn MongoDBCompass là một lợi thế :))) (để xem database trong lúc dùng á)
+
+---
+
+## 🔐 Cấu hình biến môi trường
+
+### 1️⃣ Backend
+
+Copy file biến môi trường mẫu:
+
 ```bash
 cp apps/api/.env.example apps/api/.env
-Điền tối thiểu:
+```
 
-MONGO_URI (MongoDB Atlas)
+Mở file `apps/api/.env` và chỉnh tối thiểu các biến sau (t ghim trên nhóm á):
 
-JWT_SECRET
-
-CORS_ORIGIN=http://localhost:5173
-
+```env
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
 PORT=4000
 ```
-### 2.2 Frontend env
+
+> ⚠️ **Lưu ý:** Không commit file `.env` lên GitHub.
+
+---
+
+### 2️⃣ Frontend
+
+Copy file biến môi trường mẫu:
+
 ```bash
-Copy code
 cp apps/web/.env.example apps/web/.env
-Điền:
+```
 
+Nội dung cơ bản của file `apps/web/.env`:
+
+```env
 VITE_API_URL=http://localhost:4000
-
-VITE_SOCKET_URL=http://localhost:4000 (nếu dùng realtime)
-
-Lưu ý: KHÔNG commit file .env. Chỉ commit .env.example.
+VITE_SOCKET_URL=http://localhost:4000
 ```
-## 3) Chạy dự án
-### 3.1 Chạy bằng Docker (khuyên dùng)
+
+---
+
+## ▶️ Chạy ứng dụng bằng Docker
+
+Tại thư mục gốc của project, chạy lệnh sau:
+
 ```bash
-Copy code
 docker compose -f docker-compose.dev.yml up --build
-Web: http://localhost:5173
-
-API: http://localhost:4000
-
-Swagger docs: http://localhost:4000/docs
 ```
-### 3.2 Seed Admin
-```bash
-Copy code
-docker compose -f docker-compose.dev.yml exec api npm run seed:admin
-```
-## 4) Backend guideline (cho người làm backend)
-### 4.1 Thêm module API mới (quy ước)
-Mỗi module nên có:
 
-*.model.ts (Mongoose schema)
+Sau khi chạy thành công, hệ thống sẽ hoạt động tại:
 
-*.controller.ts (xử lý request)
-
-*.routes.ts (định tuyến + middleware)
-
-(tuỳ chọn) *.service.ts (nếu muốn tách nghiệp vụ)
-
-Ví dụ thêm module requests:
-
-apps/api/src/modules/requests/request.model.ts
-
-apps/api/src/modules/requests/request.controller.ts
-
-apps/api/src/modules/requests/request.routes.ts
-
-Sau đó mount trong src/server.ts:
-
-ts
-Copy code
-app.use("/requests", requestRoutes);
-### 4.2 Middleware & phân quyền
-authGuard: kiểm tra Bearer JWT
-
-requireRole("CUSTOMER" | "COMPANY" | "ADMIN")
-
-requireCompanyActive: COMPANY phải ACTIVE mới dùng nghiệp vụ chính
-
-Gợi ý áp dụng:
-
-API khách: authGuard + requireRole("CUSTOMER")
-
-API công ty: authGuard + requireRole("COMPANY") + requireCompanyActive
-
-API admin: authGuard + requireRole("ADMIN")
-
-### 4.3 Swagger/OpenAPI docs
-Swagger UI: GET /docs
-
-JSON spec: GET /docs.json
-
-Khi thêm endpoint mới:
-
-Viết route
-
-Thêm OpenAPI comment trong *.routes.ts
-
-Tái sử dụng schema $ref trong components/schemas (xem src/shared/swagger.ts)
-
-## 5) Frontend guideline (ngắn gọn, đúng cách team đang làm)
-
-### 5.1 Chạy frontend (Docker)
-- Mở: http://localhost:5173
-- Code: `apps/web/`
-- Cài thêm package (làm trong container):
-  - `docker compose exec web sh`
-  - `npm i <package>`
-- Commit kèm: `apps/web/package.json` + `apps/web/package-lock.json`
+- 🌐 Web app: http://localhost:5173
+- 🔌 API server: http://localhost:4000
+- 📘 Swagger API Docs: http://localhost:4000/docs
 
 ---
 
-### 5.2 Nơi đặt code UI (quan trọng)
-Trong `apps/web/src/`:
-- `pages/` : mỗi màn hình 1 file (theo module)
-  - Ví dụ auth:  
-    - `pages/auth/AuthWelcome.tsx`  
-    - `pages/auth/Login.tsx`  
-    - `pages/auth/Register.tsx`
-- `pages/<module>/<module>.css` : CSS riêng theo module (khuyến nghị)
-  - Ví dụ: `pages/auth/auth.css`
-- `assets/` : ảnh/logo
-  - Ví dụ: `src/assets/logochuan.png`
-- `services/` : tầng gọi API (không gọi fetch/axios trực tiếp trong JSX)
-  - Ví dụ: `services/api.ts`, `services/authApi.ts`
+## 👤 Tài khoản dùng thử
 
----
+### Customer
+- **Email:** customer1@gmail.com  
+- **Password:** 123456  
 
-### 5.3 Tạo Page mới (quy trình bắt buộc)
-1) Tạo file page tại `src/pages/<module>/...`
-2) Nếu có style riêng: tạo `src/pages/<module>/<module>.css` và import trong page:
-   - `import "./auth.css";`
-3) Thêm route trong `apps/web/src/App.tsx`
-4) Điều hướng bằng `useNavigate()`  
-> Nếu gặp lỗi `No routes matched location "/..."` => thiếu route trong `App.tsx`.
+### Company
+- **Email:** company1@gmail.com  
+- **Password:** 123456  
 
----
+### Admin
+- **Email:** admin@rescue.local  
+- **Password:** admin123  
 
-### 5.4 “Phone frame” (UI giả lập app mobile)
-- Mọi page kiểu auth nên bọc theo khung:
-  - `.auth-root` + `.auth-shell`
-- Quy ước chống scroll ngoài:
-  - `body { overflow: hidden; }`
-- Nếu page cần scroll nội dung: tạo container nội bộ (vd `.screen-scroll`) và set `overflow: auto; height: 100%;`
+> ⚠️ **Lưu ý về tài khoản Admin**  
+> - Hiện **chưa có giao diện đăng nhập Admin**  
+> - Tài khoản này dùng để test API duyệt company trên **Swagger** (`http://localhost:4000/docs`)  
+>   hoặc test trực tiếp bằng **Postman**
 
----
+> ⚠️ **Lưu ý khi đăng ký mới tài khoản Company**
+> - Nếu chưa được admin duyệt mà đăng nhập thì không dùng được chức năng gì (có thể đăng nhập thử khi chưa được duyệt)
+> - Khi được duyệt xong thì nhớ vào phần tài khoản (ở thanh điều hướng dưới hoặc logo góc trên bên phải) để đăng ký dịch vụ mà công ty cung cấp (trong danh sách các dịch vụ đã có)
 
-### 5.5 CSS chỉnh ở đâu?
-- CSS dùng chung tối thiểu để ở `src/index.css` (reset + phone frame base).
-- CSS từng module để ở `src/pages/<module>/<module>.css` (để `index.css` không bị dài và tránh đè nhau).
-
----
-
-### 5.6 ENV & API base URL (Vite)
-- File mẫu: `apps/web/.env.example`
-- File chạy local: `apps/web/.env` (KHÔNG push git)
-- Dùng trong code:
-  - `import.meta.env.VITE_API_URL`
-
----
-
-### 5.7 Auth flow 
-- `POST /auth/login` -> nhận `accessToken`
-- Lưu token:
-  - `localStorage.setItem("accessToken", token)`
-- API cần auth:
-  - Header: `Authorization: Bearer <token>`
-- Logout:
-  - `localStorage.removeItem("accessToken")`
-
----
-
-### 5.8 Checklist trước khi commit UI
-- [ ] Page nằm đúng `src/pages/<module>/`
-- [ ] Route đã thêm trong `App.tsx`
-- [ ] CSS module không đè nhau, `index.css` không phình to
-- [ ] API gọi qua `src/services/*`
-- [ ] Không commit `.env`
-
-## 6) Tài liệu Use Case
-docs/usecases.md (kèm ảnh trong assets/)
-
-less
-Copy code
-
----
+> ⚠️ **Lưu ý khi nhập tọa độ** 
+> - Cả khi đăng ký thông tin cho Company hay phần gửi yêu cầu của Customer đều chưa thể load bản đồ nên nhập tạm bằng tay nhé :))
 

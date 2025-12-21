@@ -23,14 +23,23 @@ export default function RescueNewLocation() {
     navigate("/customer/rescue/new", { replace: true });
   }
 
-  const [lat, setLat] = useState<number | "">("");
-  const [lng, setLng] = useState<number | "">("");
+  // Chuyển sang dùng string để nhập liệu dấu thập phân không bị lỗi
+  const [lat, setLat] = useState("");
+  const [lng, setLng] = useState("");
   const [addressText, setAddressText] = useState("");
   const [getting, setGetting] = useState(false);
   const [error, setError] = useState("");
 
+  // Kiểm tra xem chuỗi nhập vào có phải là số hợp lệ không
   const canNext = useMemo(() => {
-    return typeof lat === "number" && typeof lng === "number" && !Number.isNaN(lat) && !Number.isNaN(lng);
+    const latNum = parseFloat(lat);
+    const lngNum = parseFloat(lng);
+    return (
+      !isNaN(latNum) && 
+      !isNaN(lngNum) && 
+      lat.trim() !== "" && 
+      lng.trim() !== ""
+    );
   }, [lat, lng]);
 
   const getCurrentLocation = () => {
@@ -45,8 +54,8 @@ export default function RescueNewLocation() {
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setLat(Number(pos.coords.latitude.toFixed(6)));
-        setLng(Number(pos.coords.longitude.toFixed(6)));
+        setLat(String(pos.coords.latitude.toFixed(6)));
+        setLng(String(pos.coords.longitude.toFixed(6)));
         setGetting(false);
       },
       (err) => {
@@ -61,18 +70,16 @@ export default function RescueNewLocation() {
     );
   };
 
-    // BottomNav dùng chung => mapping riêng cho CUSTOMER ngay tại màn này
   const handleNav = (key: string) => {
     setTab(key);
     if (key === "home") navigate("/home");
     if (key === "requests") navigate("/customer/requests");
-    if (key === "account") navigate("/customer/account"); // bạn tạo sau
+    if (key === "account") navigate("/customer/account");
   };
 
   return (
     <AppShell>
       <div className="page">
-        {/* Top */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <button className="authForm-back" onClick={() => navigate(-1)} aria-label="Quay lại">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -93,7 +100,7 @@ export default function RescueNewLocation() {
 
         <div className="card">
           <div className="sub" style={{ marginTop: 0 }}>
-            Gợi ý: trước mắt dùng “Vị trí hiện tại” hoặc nhập tay lat/lng. Sau này mình có thể nâng cấp sang chọn trên bản đồ.
+            Gợi ý: trước mắt dùng “Vị trí hiện tại” hoặc nhập tay lat/lng.
           </div>
 
           <div style={{ height: 12 }} />
@@ -115,15 +122,19 @@ export default function RescueNewLocation() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
             <input
               className="authForm-input"
+              type="text"
+              inputMode="decimal"
               placeholder="lat (vd 21.028)"
-              value={lat === "" ? "" : String(lat)}
-              onChange={(e) => setLat(e.target.value === "" ? "" : Number(e.target.value))}
+              value={lat}
+              onChange={(e) => setLat(e.target.value)}
             />
             <input
               className="authForm-input"
+              type="text"
+              inputMode="decimal"
               placeholder="lng (vd 105.834)"
-              value={lng === "" ? "" : String(lng)}
-              onChange={(e) => setLng(e.target.value === "" ? "" : Number(e.target.value))}
+              value={lng}
+              onChange={(e) => setLng(e.target.value)}
             />
           </div>
 
@@ -143,11 +154,14 @@ export default function RescueNewLocation() {
             style={{ width: "100%", opacity: canNext ? 1 : 0.55 }}
             disabled={!canNext}
             onClick={() => {
-              // Bước 3: gọi /companies/suggest
+              // Parse chuỗi sang số trước khi gửi đi
               navigate("/customer/rescue/new/companies", {
                 state: {
                   category,
-                  location: { lat, lng },
+                  location: { 
+                    lat: parseFloat(lat), 
+                    lng: parseFloat(lng) 
+                  },
                   addressText,
                 },
               });

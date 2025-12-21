@@ -67,12 +67,10 @@ export default function RescueNewCompanies() {
       const data = await res.json();
 
       if (!res.ok) {
-        // theo bạn: 400 { message }
         throw new Error(data.message || "Không lấy được danh sách công ty");
       }
 
       setItems(data.items || []);
-      // auto select item đầu nếu có
       if ((data.items || []).length > 0) setSelectedId(data.items[0].id);
     } catch (e: any) {
       setError(e.message || "Lỗi gọi companies/suggest");
@@ -85,7 +83,6 @@ export default function RescueNewCompanies() {
 
   useEffect(() => {
     fetchSuggest();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const selectedCompany = items.find((x) => x.id === selectedId);
@@ -93,18 +90,16 @@ export default function RescueNewCompanies() {
   const formatMoney = (v: number) =>
     v.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
 
-    // BottomNav dùng chung => mapping riêng cho CUSTOMER ngay tại màn này
   const handleNav = (key: string) => {
     setTab(key);
     if (key === "home") navigate("/home");
     if (key === "requests") navigate("/customer/requests");
-    if (key === "account") navigate("/customer/account"); // bạn tạo sau
+    if (key === "account") navigate("/customer/account");
   };
 
   return (
     <AppShell>
       <div className="page">
-        {/* Top */}
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <button className="authForm-back" onClick={() => navigate(-1)} aria-label="Quay lại">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -114,7 +109,7 @@ export default function RescueNewCompanies() {
           <div>
             <div className="h1" style={{ fontSize: 18 }}>Chọn đơn vị cứu hộ</div>
             <div className="sub" style={{ marginTop: 4 }}>
-              Dịch vụ: <b>{category?.name}</b> • Bán kính: <b>{radiusKm}km</b>
+              Dịch vụ: <b>{category?.name}</b>
             </div>
           </div>
         </div>
@@ -123,51 +118,56 @@ export default function RescueNewCompanies() {
 
         {error && <div className="authForm-error">{error}</div>}
 
-        {/* Bộ lọc nhỏ */}
-        <div className="card" style={{ display: "grid", gap: 10 }}>
+        <div className="card" style={{ display: "grid", gap: 12 }}>
           <div className="sub" style={{ marginTop: 0 }}>
             Vị trí: <b>{locationState?.lat}</b>, <b>{locationState?.lng}</b>
             {addressText ? <> • <span>{addressText}</span></> : null}
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-            <input
-              className="authForm-input"
-              value={radiusKm}
-              onChange={(e) => setRadiusKm(Number(e.target.value || 10))}
-              placeholder="radiusKm"
-              type="number"
-              min={1}
-            />
-            <input
-              className="authForm-input"
-              value={limit}
-              onChange={(e) => setLimit(Number(e.target.value || 10))}
-              placeholder="limit"
-              type="number"
-              min={1}
-              max={50}
-            />
+          {/* SỬA TẠI ĐÂY: Thêm label rõ ràng cho bộ lọc */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 15 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "#666" }}>Bán kính (km)</label>
+              <input
+                className="authForm-input"
+                value={radiusKm}
+                onChange={(e) => setRadiusKm(Number(e.target.value || 10))}
+                placeholder="Ví dụ: 10"
+                type="number"
+                min={1}
+              />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "#666" }}>Số kết quả</label>
+              <input
+                className="authForm-input"
+                value={limit}
+                onChange={(e) => setLimit(Number(e.target.value || 10))}
+                placeholder="Ví dụ: 10"
+                type="number"
+                min={1}
+                max={50}
+              />
+            </div>
           </div>
 
           <button className="provider-btn" style={{ width: "100%" }} onClick={fetchSuggest} disabled={loading}>
-            {loading ? "Đang tải..." : "Tải lại gợi ý"}
+            {loading ? "Đang tải..." : "Cập nhật danh sách"}
           </button>
         </div>
 
         <div style={{ height: 12 }} />
 
-        {/* List công ty */}
         <div className="card">
           <div className="h1" style={{ fontSize: 16 }}>Gợi ý gần bạn</div>
-          <div className="sub">Chọn 1 công ty để tiếp tục tạo yêu cầu.</div>
+          <div className="sub">Bán kính tìm kiếm hiện tại: <b>{radiusKm}km</b></div>
 
           <div style={{ height: 10 }} />
 
           {loading && <div className="sub">Đang tải danh sách...</div>}
 
           {!loading && items.length === 0 && !error && (
-            <div className="sub">Không có công ty phù hợp trong bán kính hiện tại.</div>
+            <div className="sub">Không tìm thấy công ty nào trong phạm vi {radiusKm}km. Hãy thử tăng bán kính.</div>
           )}
 
           <div className="companyList">
@@ -195,7 +195,6 @@ export default function RescueNewCompanies() {
 
         <div style={{ height: 12 }} />
 
-        {/* CTA */}
         <button
           className="provider-btn"
           style={{ width: "100%", opacity: selectedCompany ? 1 : 0.55 }}
