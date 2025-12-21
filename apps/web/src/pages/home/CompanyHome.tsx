@@ -166,7 +166,6 @@ export default function CompanyHome() {
 
   const handleNav = (key: string) => {
     setTab(key);
-
     if (key === "requests") navigate("/company/requests");
     if (key === "home") navigate("/home");
     if (key === "account") navigate ("/company/account");

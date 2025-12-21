@@ -16,6 +16,9 @@ import CompanyFeedback from "./pages/company/CompanyFeedback.tsx";
 import CompanyRequestsAll from "./pages/company/CompanyRequestsAll";
 import CompanyUpdateProfile from "./pages/company/CompanyUpdateProfile";
 import CompanyAccount from "./pages/company/CompanyAccount";
+import CustomerAccount from "./pages/customer/CustomerAccount";
+import CustomerRequestsAll from "./pages/customer/CustomerRequestsAll";
+import CustomerRequestDetail from "./pages/customer/CustomerRequestDetail";
 
 
 
@@ -36,6 +39,11 @@ export default function App() {
       <Route path="/customer/rescue/new/companies" element={<RescueNewCompanies />} />
       <Route path="/customer/rescue/new/confirm" element={<RescueNewConfirm />} />
       <Route path="/customer/rescue/new/success" element={<RescueNewSuccess />} />
+      <Route path="/customer/account" element={<CustomerAccount />} />
+      <Route path="/customer/requests" element={<CustomerRequestsAll />} />
+      <Route path="/customer/requests/:id" element={<CustomerRequestDetail />} />
+
+
 
       {/* COMPANY: routes tĩnh trước */}
       <Route path="/company/requests/pending" element={<CompanyRequestsPending />} />

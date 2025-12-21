@@ -41,6 +41,14 @@ export default function CustomerHome() {
   const user = raw ? JSON.parse(raw) : null;
   const userName = user?.name || "bạn";
 
+  const handleNav = (key: string) => {
+    setTab(key);
+    if (key === "requests") navigate("/customer/requests");
+    if (key === "home") navigate("/home");
+    if (key === "account") navigate ("/customer/account");
+    // các key khác nếu company chưa dùng thì cứ để sau
+  };
+
 
   return (
     <AppShell>
@@ -77,7 +85,10 @@ export default function CustomerHome() {
             <div className="actionDesc">Tạo yêu cầu nhanh, gửi vị trí và mô tả sự cố.</div>
             </button>
 
-            <button className="actionCard">
+            <button 
+              className="actionCard"
+              onClick={() => navigate("/customer/requests")}
+            >
             <div className="actionIcon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                 <path
@@ -133,7 +144,7 @@ export default function CustomerHome() {
         </div>
         </div>
 
-        <BottomNav activeKey={tab} onChange={setTab} />
+        <BottomNav activeKey={tab} onChange={handleNav} />
     </AppShell>
     );
 
