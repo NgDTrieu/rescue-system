@@ -322,6 +322,8 @@ export default function CompanyHome() {
                     />
                   </svg>
                 }
+                onClick={() => navigate("/company/profile")}
+
               />
 
               <ManageTile

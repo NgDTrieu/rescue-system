@@ -729,3 +729,179 @@
   color: rgba(11,23,54,0.8);
 }
 
+.grid2{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.label{
+  font-weight: 900;
+  color: rgba(11,23,54,0.75);
+  margin-bottom: 6px;
+}
+
+.input{
+  width: 100%;
+  border-radius: 14px;
+  border: 2px solid rgba(11,23,54,0.10);
+  padding: 12px 12px;
+  font-weight: 800;
+  outline: none;
+  background: rgba(255,255,255,0.95);
+}
+
+.btnSecondary{
+  width: 100%;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-weight: 950;
+  border: 2px solid rgba(11,23,54,0.10);
+  background: rgba(255,255,255,0.85);
+  cursor: pointer;
+}
+
+.serviceList{
+  display: grid;
+  gap: 10px;
+}
+
+.serviceRow{
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: 10px;
+  align-items: center;
+  border: 2px solid rgba(11,23,54,0.08);
+  border-radius: 16px;
+  padding: 10px;
+  background: rgba(255,255,255,0.92);
+}
+
+.serviceRow.on{
+  border-color: rgba(44,121,255,0.35);
+}
+
+.serviceLeft{
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.serviceName{
+  font-weight: 1000;
+  color: rgba(11,23,54,0.9);
+}
+
+.priceInput{
+  width: 100%;
+  border-radius: 14px;
+  border: 2px solid rgba(11,23,54,0.10);
+  padding: 10px 10px;
+  font-weight: 950;
+  text-align: right;
+  background: rgba(255,255,255,0.96);
+}
+
+
+.fixedAction {
+  position: absolute;              /* nằm trong khung app-shell */
+  left: 0;
+  right: 0;
+  bottom: 84px;                    /* tuỳ bạn (chừa bottom nav) */
+  padding: 0 16px;
+  display: flex;
+  justify-content: center;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.fixedAction .btnPrimary{
+  pointer-events: auto;
+
+  /* QUAN TRỌNG: ăn theo container, không dùng 100vw */
+  width: 100%;
+  max-width: 360px;                /* hoặc 380 tuỳ bạn */
+  
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-weight: 900;                /* để 900 thôi, không cần 1000 */
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(180deg, #2c79ff, #1f5fe6);
+  color: white;
+  box-shadow: 0 12px 22px rgba(31,95,230,0.25);
+}
+
+
+.authForm-success{
+  background: rgba(30, 180, 90, 0.12);
+  border: 2px solid rgba(30, 180, 90, 0.22);
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-weight: 850;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   OVERFLOW FIX (paste at END of home.css)
+   Mục tiêu: không cho input / row tràn ra ngoài card
+   ========================= */
+
+/* Anti overflow cơ bản */
+*, *::before, *::after { box-sizing: border-box; }
+.page, .card { max-width: 100%; }
+.page { overflow-x: hidden; } /* chặn cuộn ngang do phần tử tràn */
+
+/* Card chứa form */
+.card { overflow: hidden; } /* tránh border + shadow của con vượt ra */
+
+/* 2 input Lat/Lng */
+.grid2 { width: 100%; max-width: 100%; }
+.grid2 > * { min-width: 0; }            /* QUAN TRỌNG: cho phép co lại */
+.grid2 input { width: 100%; max-width: 100%; }
+
+/* Danh sách dịch vụ */
+.serviceList { width: 100%; max-width: 100%; }
+
+/* Mỗi dòng dịch vụ: dùng GRID để cột giá không làm tràn */
+.serviceRow{
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 112px; /* trái co giãn, phải cố định */
+  gap: 10px;
+  align-items: center;
+}
+
+/* Khối bên trái (checkbox + text) */
+.serviceLeft{
+  min-width: 0;                /* QUAN TRỌNG: tránh text ép tràn */
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.serviceLeft > div{ min-width: 0; }      /* text wrapper co được */
+.serviceName, .serviceDesc{
+  overflow-wrap: anywhere;      /* text dài tự xuống dòng */
+}
+
+/* Ô giá (input) */
+.priceInput{
+  width: 112px !important;
+  max-width: 112px !important;
+  min-width: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* Nếu bạn có bọc input giá trong 1 div (vd: .priceCol) thì thêm: */
+.priceCol{ width: 112px; max-width: 112px; justify-self: end; }
+
+/* Chặn input / select bất kỳ tự “phình” */
+input, select, textarea{
+  max-width: 100%;
+}
+
+

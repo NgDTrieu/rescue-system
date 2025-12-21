@@ -14,6 +14,7 @@ import CompanyRequestsInProgress from "./pages/company/CompanyRequestsInProgress
 import CompanyRequestsToday from "./pages/company/CompanyRequestsToday";
 import CompanyFeedback from "./pages/company/CompanyFeedback.tsx";
 import CompanyRequestsAll from "./pages/company/CompanyRequestsAll";
+import CompanyUpdateProfile from "./pages/company/CompanyUpdateProfile";
 
 
 
@@ -39,6 +40,8 @@ export default function App() {
       <Route path="/company/requests/today" element={<CompanyRequestsToday />} />
       <Route path="/company/feedback" element={<CompanyFeedback />} />
       <Route path="/company/requests" element={<CompanyRequestsAll />} />
+      <Route path="/company/profile" element={<CompanyUpdateProfile />} />
+
 
 
       {/* COMPANY: route động để cuối */}
