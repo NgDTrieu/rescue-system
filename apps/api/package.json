@@ -10,7 +10,9 @@
     "start": "node dist/server.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "seed:admin": "tsx src/scripts/seedAdmin.ts",
-    "seed:categories": "tsx src/scripts/seedCategories.ts"
+    "seed:categories": "tsx src/scripts/seedCategories.ts", 
+    "seed:tips": "tsx src/scripts/seedCommunityTips.ts"
+
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

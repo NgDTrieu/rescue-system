@@ -327,6 +327,27 @@ export const swaggerSpec = swaggerJSDoc({
 
           },
         },
+        CommunityTipItem: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            title: { type: "string" },
+            solution: { type: "string" },
+            createdAt: { type: "string" },
+            updatedAt: { type: "string" },
+          },
+        },
+
+        CommunityTipListResponse: {
+          type: "object",
+          properties: {
+            page: { type: "number" },
+            limit: { type: "number" },
+            total: { type: "number" },
+            count: { type: "number" },
+            items: { type: "array", items: { $ref: "#/components/schemas/CommunityTipItem" } },
+          },
+        },
 
       },
     },

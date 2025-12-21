@@ -20,6 +20,8 @@ import CustomerAccount from "./pages/customer/CustomerAccount";
 import CustomerRequestsAll from "./pages/customer/CustomerRequestsAll";
 import CustomerRequestDetail from "./pages/customer/CustomerRequestDetail";
 import CustomerRescueHistory from "./pages/customer/CustomerRescueHistory";
+import CustomerCommunityTips from "./pages/customer/CustomerCommunityTips";
+import CustomerCommunityTipCreate from "./pages/customer/CustomerCommunityTipCreate";
 
 
 
@@ -41,6 +43,9 @@ export default function App() {
       <Route path="/customer/rescue/new/confirm" element={<RescueNewConfirm />} />
       <Route path="/customer/rescue/new/success" element={<RescueNewSuccess />} />
       <Route path="/customer/account" element={<CustomerAccount />} />
+      <Route path="/customer/community" element={<CustomerCommunityTips />} />
+      <Route path="/customer/community/new" element={<CustomerCommunityTipCreate />} />
+
       <Route path="/customer/requests/history" element={<CustomerRescueHistory />} />
       <Route path="/customer/requests" element={<CustomerRequestsAll />} />
       <Route path="/customer/requests/:id" element={<CustomerRequestDetail />} />

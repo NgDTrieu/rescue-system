@@ -1,0 +1,136 @@
+/* communityCreate.css */
+
+/* Tận dụng cấu trúc app-root và app-shell từ home.css */
+
+.create-container {
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Thẻ Card chính */
+.form-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(11, 23, 54, 0.02);
+}
+
+/* Group các ô nhập liệu */
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 850;
+  color: #0b1736;
+  margin-bottom: 8px;
+  margin-left: 4px;
+}
+
+/* Style cho Input và Textarea */
+.custom-input, .custom-textarea {
+  width: 100%;
+  border-radius: 16px;
+  border: 2px solid #f0f1f5;
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0b1736;
+  background: #fcfdfe;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.custom-input:focus, .custom-textarea:focus {
+  border-color: #2c79ff;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(44, 121, 255, 0.08);
+}
+
+.custom-input::placeholder, .custom-textarea::placeholder {
+  color: rgba(11, 23, 54, 0.3);
+  font-weight: 600;
+}
+
+.custom-textarea {
+  resize: none;
+  line-height: 1.6;
+}
+
+/* Nút bấm */
+.action-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 56px;
+  border-radius: 18px;
+  border: none;
+  background: linear-gradient(180deg, #448aff 0%, #2c79ff 100%);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(44, 121, 255, 0.25);
+  transition: transform 0.1s ease;
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+.submit-btn:disabled {
+  background: #cbd5e0;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  width: 100%;
+  height: 56px;
+  border-radius: 18px;
+  border: 2px solid #f0f1f5;
+  background: #ffffff;
+  color: rgba(11, 23, 54, 0.6);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background: #f9fafb;
+  color: #0b1736;
+}
+
+/* Thông báo lỗi/thành công */
+.alert {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.alert-error {
+  background: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #fed7d7;
+}
+
+.alert-success {
+  background: #f0fff4;
+  color: #38a169;
+  border: 1px solid #c6f6d5;
+}

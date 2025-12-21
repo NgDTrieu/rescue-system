@@ -1,0 +1,206 @@
+/* community.css */
+
+/* 1. Layout đồng bộ app-shell */
+.appShell {
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: #0b1220; /* Nền tối bao quanh điện thoại */
+}
+
+.screen {
+  width: min(392px, 100%);
+  height: 100dvh;
+  background: #f6f7fb;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 2. Top Bar đồng bộ */
+.topBar {
+  padding: 16px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(11, 23, 54, 0.05);
+}
+
+.topBarTitle .title {
+  font-size: 18px;
+  font-weight: 950;
+  color: #0b1736;
+}
+
+.topBarTitle .subTitle {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(11, 23, 54, 0.5);
+}
+
+/* 3. Content Area */
+.contentScroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.sectionCard {
+  background: #fff;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
+  margin-bottom: 16px;
+}
+
+/* 4. List Card & Solution Handling */
+.listCard {
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(11, 23, 54, 0.03);
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 900;
+  color: #0b1736;
+  line-height: 1.4;
+}
+
+/* Xử lý nội dung dài */
+.solutionWrapper {
+  margin-top: 8px;
+  position: relative;
+}
+
+.cardDesc {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(11, 23, 54, 0.65);
+  line-height: 1.5;
+  transition: all 0.3s ease;
+}
+
+.collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Giới hạn 3 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.readMoreBtn {
+  background: none;
+  border: none;
+  color: #2c79ff;
+  font-size: 12px;
+  font-weight: 850;
+  padding: 4px 0;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.statusPill {
+  background: rgba(44, 121, 255, 0.1);
+  color: #2c79ff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 4px 10px;
+  border-radius: 8px;
+  text-transform: uppercase;
+}
+
+/* 5. Form Fields */
+.field .label {
+  font-size: 13px;
+  font-weight: 850;
+  color: #0b1736;
+  margin-bottom: 6px;
+}
+
+.toastSuccess {
+  background: rgba(46, 204, 113, 0.1);
+  color: #2ecc71;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.emptyBox {
+  text-align: center;
+  padding: 40px 20px;
+  color: rgba(11, 23, 54, 0.4);
+  font-weight: 700;
+}
+
+/* Phân trang */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding-bottom: 20px;
+}
+
+.btnIconSmall {
+  background: #fff;
+  border: 1px solid rgba(11, 23, 54, 0.1);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+}
+
+.btnIconSmall:disabled {
+  opacity: 0.3;
+}
+
+.pageIndicator {
+  font-size: 12px;
+  font-weight: 800;
+  color: rgba(11, 23, 54, 0.5);
+}
+
+/* Header & Footer của Card */
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.cardFooter {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(11, 23, 54, 0.05);
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(11, 23, 54, 0.4);
+}
+
+.searchSection {
+  margin-bottom: 20px;
+}
+
+/* Hiệu ứng thu gọn chữ */
+.collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Hiển thị tối đa 3 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

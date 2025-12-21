@@ -107,7 +107,10 @@ export default function CustomerHome() {
             <div className="actionDesc">Theo dõi trạng thái: chờ nhận, đang xử lý, hoàn thành.</div>
             </button>
 
-            <button className="actionCard">
+            <button 
+              className="actionCard"
+              onClick={() => navigate("/customer/community")}
+            >
             <div className="actionIcon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                 <path

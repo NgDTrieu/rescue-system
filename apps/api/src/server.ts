@@ -13,6 +13,8 @@ import companyRoutes from "./modules/company/company.routes";
 import requestRoutes from "./modules/requests/request.routes";
 import categoryRoutes from "./modules/categories/category.routes";
 import companiesRoutes from "./modules/companies/companies.routes";
+import communityRoutes from "./modules/community/community.routes";
+import communityTipRoutes from "./modules/communityTips/communityTip.routes";
 
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./shared/swagger";
@@ -34,6 +36,7 @@ app.use("/company", companyRoutes);
 app.use("/requests", requestRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/companies", companiesRoutes);
+app.use("/community", communityTipRoutes);
 
 app.get("/health", (_req, res) => res.json({ ok: true, ts: Date.now() }));
 
