@@ -122,7 +122,10 @@ export default function CustomerHome() {
             <div className="actionDesc">Hỏi nhanh – đáp gọn, mẹo xử lý sự cố phổ biến.</div>
             </button>
 
-            <button className="actionCard">
+            <button 
+              className="actionCard"
+              onClick = {() => navigate("/customer/requests/history")}  
+            >
             <div className="actionIcon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                 <path

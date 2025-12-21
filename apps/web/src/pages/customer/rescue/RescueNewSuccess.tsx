@@ -11,6 +11,14 @@ export default function RescueNewSuccess() {
 
   const request = (loc.state as any)?.request;
 
+  // BottomNav dùng chung => mapping riêng cho CUSTOMER ngay tại màn này
+  const handleNav = (key: string) => {
+    setTab(key);
+    if (key === "home") navigate("/home");
+    if (key === "requests") navigate("/customer/requests");
+    if (key === "account") navigate("/customer/account"); // bạn tạo sau
+  };
+
   return (
     <AppShell>
       <div className="page">
@@ -41,7 +49,7 @@ export default function RescueNewSuccess() {
         </div>
       </div>
 
-      <BottomNav activeKey={tab} onChange={setTab} />
+      <BottomNav activeKey={tab} onChange={handleNav} />
     </AppShell>
   );
 }

@@ -177,12 +177,26 @@ export default function CustomerRequestDetail() {
                 />
                 </svg>
             </button>
-            <div className="topTitle">
-              <div className="h1">Chi tiết yêu cầu</div>
-              <div className="sub">ID: {id}</div>
-            </div>
-            <button className="iconBtn" onClick={load} aria-label="Refresh" title="Tải lại">
-              ⟳
+              <div className="topTitle">
+                <div className="h1">Chi tiết yêu cầu</div>
+                <div className="sub">ID: {id}</div>
+              </div>
+              <button className="dash-bell" onClick={load} aria-label="Tải lại" title="Tải lại">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M20 12a8 8 0 1 1-2.34-5.66"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M20 4v6h-6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
             </button>
           </div>
 

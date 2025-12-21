@@ -19,6 +19,7 @@ import CompanyAccount from "./pages/company/CompanyAccount";
 import CustomerAccount from "./pages/customer/CustomerAccount";
 import CustomerRequestsAll from "./pages/customer/CustomerRequestsAll";
 import CustomerRequestDetail from "./pages/customer/CustomerRequestDetail";
+import CustomerRescueHistory from "./pages/customer/CustomerRescueHistory";
 
 
 
@@ -40,6 +41,7 @@ export default function App() {
       <Route path="/customer/rescue/new/confirm" element={<RescueNewConfirm />} />
       <Route path="/customer/rescue/new/success" element={<RescueNewSuccess />} />
       <Route path="/customer/account" element={<CustomerAccount />} />
+      <Route path="/customer/requests/history" element={<CustomerRescueHistory />} />
       <Route path="/customer/requests" element={<CustomerRequestsAll />} />
       <Route path="/customer/requests/:id" element={<CustomerRequestDetail />} />
 
