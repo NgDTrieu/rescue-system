@@ -6,7 +6,8 @@ import "../home/home.css";
 
 type CompanyRequest = {
   id: string;
-  status: "COMPLETED";
+  // Cập nhật type để chấp nhận cả CANCELLED
+  status: "COMPLETED" | "CANCELLED"; 
   issueType: string;
   note?: string;
   contactName: string;
@@ -24,17 +25,6 @@ type ListResp = {
   count: number;
   items: CompanyRequest[];
 };
-
-function isTodayLocal(iso?: string | null) {
-  if (!iso) return false;
-  const d = new Date(iso);
-  const now = new Date();
-  return (
-    d.getFullYear() === now.getFullYear() &&
-    d.getMonth() === now.getMonth() &&
-    d.getDate() === now.getDate()
-  );
-}
 
 export default function CompanyRequestsToday() {
   const navigate = useNavigate();
@@ -54,7 +44,10 @@ export default function CompanyRequestsToday() {
 
     try {
       const token = localStorage.getItem("accessToken");
-      const res = await fetch(`${API}/company/requests?status=COMPLETED`, {
+      
+      // SỬA TẠI ĐÂY: Gửi yêu cầu lấy cả 2 trạng thái. 
+      // Lưu ý: Tùy vào Backend, nếu backend dùng mảng thì là ?status=COMPLETED&status=CANCELLED
+      const res = await fetch(`${API}/company/requests?status=COMPLETED&status=CANCELLED`, {
         headers: {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -62,11 +55,11 @@ export default function CompanyRequestsToday() {
       });
 
       const data = (await res.json()) as ListResp;
-      if (!res.ok) throw new Error((data as any).message || "Không tải được danh sách COMPLETED");
+      if (!res.ok) throw new Error((data as any).message || "Không tải được danh sách yêu cầu");
 
-      // Lọc “hôm nay”: ưu tiên completedAt, fallback updatedAt/createdAt
       const all = data.items || [];
 
+      // Sắp xếp theo thời gian mới nhất
       all.sort((a, b) => {
         const ta = new Date(a.completedAt ?? a.updatedAt ?? a.createdAt).getTime();
         const tb = new Date(b.completedAt ?? b.updatedAt ?? b.createdAt).getTime();
@@ -85,10 +78,8 @@ export default function CompanyRequestsToday() {
 
   useEffect(() => {
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-    // BottomNav dùng chung => điều hướng theo role tại màn
   const handleNav = (key: string) => {
     setTab(key);
     if (key === "home") navigate("/home");
@@ -102,24 +93,18 @@ export default function CompanyRequestsToday() {
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <button className="authForm-back" onClick={() => navigate(-1)} aria-label="Quay lại">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M15 18l-6-6 6-6"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
 
           <div style={{ flex: 1 }}>
-            <div className="h1" style={{ fontSize: 18 }}>Hoàn thành hôm nay</div>
+            <div className="h1" style={{ fontSize: 18 }}>Lịch sử hôm nay</div>
             <div className="sub" style={{ marginTop: 4 }}>
-              Trạng thái: <b>COMPLETED</b>
+              Trạng thái: <b>Hoàn thành / Đã hủy</b>
             </div>
           </div>
 
-          <button className="dash-bell" onClick={load} aria-label="Tải lại" title="Tải lại">
+          <button className="dash-bell" onClick={load} aria-label="Tải lại">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M20 12a8 8 0 1 1-2.34-5.66" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               <path d="M20 4v6h-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -133,13 +118,13 @@ export default function CompanyRequestsToday() {
 
         <div className="card">
           <div className="sub" style={{ marginTop: 0 }}>
-            {loading ? "Đang tải..." : `Hôm nay có ${items.length} yêu cầu COMPLETED`}
+            {loading ? "Đang tải..." : `Hôm nay có ${items.length} yêu cầu kết thúc`}
           </div>
 
           <div style={{ height: 10 }} />
 
           {!loading && items.length === 0 && !error && (
-            <div className="sub">Hôm nay chưa có yêu cầu nào hoàn thành.</div>
+            <div className="sub">Hôm nay chưa có yêu cầu nào.</div>
           )}
 
           <div className="companyList">
@@ -148,10 +133,17 @@ export default function CompanyRequestsToday() {
                 key={r.id}
                 className="companyCard"
                 onClick={() => navigate(`/company/requests/${r.id}`)}
+                style={{ opacity: r.status === "CANCELLED" ? 0.8 : 1 }} // Làm mờ nhẹ các item đã hủy
               >
                 <div className="companyTop">
                   <div className="companyName">{r.issueType}</div>
-                  <div className="companyDist">COMPLETED</div>
+                  {/* Hiển thị label màu đỏ nếu bị hủy */}
+                  <div 
+                    className="companyDist" 
+                    style={{ color: r.status === "CANCELLED" ? "#ff4d4f" : "#52c41a" }}
+                  >
+                    {r.status}
+                  </div>
                 </div>
 
                 <div className="companyMeta">
@@ -165,7 +157,7 @@ export default function CompanyRequestsToday() {
                 </div>
 
                 <div className="sub" style={{ marginTop: 8 }}>
-                  Hoàn thành:{" "}
+                  Kết thúc:{" "}
                   {new Date(r.completedAt ?? r.updatedAt ?? r.createdAt).toLocaleString("vi-VN")}
                 </div>
               </button>

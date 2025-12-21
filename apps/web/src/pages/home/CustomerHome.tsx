@@ -68,7 +68,7 @@ export default function CustomerHome() {
         {/* 4 actions */}
         <div className="actionGrid">
             <button 
-                className="actionCard actionCard--primary"
+                className="actionCard"
                 onClick={() => navigate("/customer/rescue/new")}
             >
             <div className="actionIcon">
