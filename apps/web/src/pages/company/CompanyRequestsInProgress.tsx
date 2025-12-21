@@ -78,6 +78,13 @@ export default function CompanyRequestsInProgress() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+    // BottomNav dùng chung => điều hướng theo role tại màn
+  const handleNav = (key: string) => {
+    setTab(key);
+    if (key === "home") navigate("/home");
+    if (key === "requests") navigate("/company/requests");
+  };
+
   return (
     <AppShell>
       <div className="page">
@@ -149,7 +156,7 @@ export default function CompanyRequestsInProgress() {
         </div>
       </div>
 
-      <BottomNav activeKey={tab} onChange={setTab} />
+      <BottomNav activeKey={tab} onChange={handleNav} />
     </AppShell>
   );
 }

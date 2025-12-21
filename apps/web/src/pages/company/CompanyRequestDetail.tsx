@@ -162,6 +162,13 @@ export default function CompanyRequestDetail() {
     }
   };
 
+    // BottomNav dùng chung => điều hướng theo role tại màn
+  const handleNav = (key: string) => {
+    setTab(key);
+    if (key === "home") navigate("/home");
+    if (key === "requests") navigate("/company/requests");
+  };
+
 
   return (
     <AppShell>
@@ -397,7 +404,7 @@ export default function CompanyRequestDetail() {
         </div>
       </div>
 
-      <BottomNav activeKey={tab} onChange={setTab} />
+      <BottomNav activeKey={tab} onChange={handleNav} />
     </AppShell>
   );
 }
