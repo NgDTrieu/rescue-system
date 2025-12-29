@@ -22,6 +22,7 @@ import CustomerRequestDetail from "./pages/customer/CustomerRequestDetail";
 import CustomerRescueHistory from "./pages/customer/CustomerRescueHistory";
 import CustomerCommunityTips from "./pages/customer/CustomerCommunityTips";
 import CustomerCommunityTipCreate from "./pages/customer/CustomerCommunityTipCreate";
+import AdminHome from "./pages/admin/AdminHome";
 
 
 
@@ -30,6 +31,8 @@ export default function App() {
     <Routes>
       <Route path="/" element={<AuthWelcome />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/admin" element={<AdminHome />} />
+
 
       <Route path="/auth" element={<AuthWelcome />} />
       <Route path="/auth/login" element={<Login />} />

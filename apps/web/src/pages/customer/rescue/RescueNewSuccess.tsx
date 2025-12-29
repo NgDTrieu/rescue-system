@@ -35,7 +35,7 @@ export default function RescueNewSuccess() {
             </div>
           )}
 
-          <button className="provider-btn" style={{ width: "100%" }} onClick={() => navigate("/")}>
+          <button className="provider-btn" style={{ width: "100%" }} onClick={() => navigate("/home")}>
             Về trang chủ
           </button>
 
