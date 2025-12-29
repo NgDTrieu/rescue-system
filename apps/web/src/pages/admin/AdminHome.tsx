@@ -89,7 +89,7 @@ export default function AdminHome() {
           <div>
             <div className="ad-h1">Duyệt tài khoản công ty</div>
             <div className="ad-muted">
-              Bước 1: dựng khung + routing. Bước sau sẽ gọi API /admin/companies.
+              
             </div>
           </div>
 

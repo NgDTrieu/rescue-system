@@ -191,7 +191,7 @@ export default function AdminReportsOverview() {
               <div className="ad-kpiLabel">ETA trung bình</div>
               <div className="ad-kpiValue">{fmtEta(data.requests.eta.avgEtaMinutes)}</div>
               <div className="ad-muted">
-                Mẫu: <b>{nf.format(data.requests.eta.count)}</b> request có ETA
+                <b>{nf.format(data.requests.eta.count)}</b> request có ETA
               </div>
             </div>
 

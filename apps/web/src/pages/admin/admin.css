@@ -390,19 +390,22 @@
 
 .ad-barCol {
   width: 26px;
+  height: 100%;                 /* ✅ quan trọng: cho % height có “mốc” */
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;     /* ✅ đẩy cột xuống đáy */
   align-items: center;
   gap: 6px;
 }
 
 .ad-bar {
   width: 100%;
-  min-height: 4px;
+  min-height: 6px;              /* ✅ để nhìn thấy ngay cả khi count nhỏ */
   border-radius: 10px;
   background: rgba(99, 102, 241, 0.45);
   border: 1px solid rgba(99, 102, 241, 0.55);
 }
+
 
 .ad-barLabel {
   font-size: 10px;
