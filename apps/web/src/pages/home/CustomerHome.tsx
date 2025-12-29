@@ -46,6 +46,8 @@ export default function CustomerHome() {
     if (key === "requests") navigate("/customer/requests");
     if (key === "home") navigate("/home");
     if (key === "account") navigate ("/customer/account");
+    if (key === "chat") navigate("/chat");
+
     // các key khác nếu company chưa dùng thì cứ để sau
   };
 

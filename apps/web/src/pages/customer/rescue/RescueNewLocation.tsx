@@ -75,6 +75,8 @@ export default function RescueNewLocation() {
     if (key === "home") navigate("/home");
     if (key === "requests") navigate("/customer/requests");
     if (key === "account") navigate("/customer/account");
+    if (key === "chat") navigate("/chat");
+
   };
 
   return (

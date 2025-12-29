@@ -23,6 +23,9 @@ import CustomerRescueHistory from "./pages/customer/CustomerRescueHistory";
 import CustomerCommunityTips from "./pages/customer/CustomerCommunityTips";
 import CustomerCommunityTipCreate from "./pages/customer/CustomerCommunityTipCreate";
 import AdminHome from "./pages/admin/AdminHome";
+import ChatRooms from "./pages/chat/ChatRooms";
+import ChatRoom from "./pages/chat/ChatRoom";
+
 
 
 
@@ -38,6 +41,10 @@ export default function App() {
       <Route path="/auth/login" element={<Login />} />
       <Route path="/auth/register" element={<Register />} />
       <Route path="/company/account" element={<CompanyAccount />} />
+
+      <Route path="/chat" element={<ChatRooms />} />
+      <Route path="/chat/:requestId" element={<ChatRoom />} />
+
 
 
       <Route path="/customer/rescue/new" element={<RescueNewSelectCategory />} />

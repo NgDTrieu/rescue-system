@@ -386,7 +386,7 @@ export default function CustomerRequestDetail() {
             onChange={(key) => {
               if (key === "home") navigate("/home");
               if (key === "requests") navigate("/customer/requests");
-              if (key === "chat") navigate("/customer/chat");
+              if (key === "chat") navigate("/chat");
               if (key === "account") navigate("/customer/account");
             }}
           />

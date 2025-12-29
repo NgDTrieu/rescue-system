@@ -168,6 +168,8 @@ export default function CompanyUpdateProfile() {
     if (key === "home") navigate("/home");
     if (key === "requests") navigate("/company/requests");
     if (key === "account") navigate ("/company/account");
+    if (key === "chat") navigate("/chat");
+
   };
 
   return (

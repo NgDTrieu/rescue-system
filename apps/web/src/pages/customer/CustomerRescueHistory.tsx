@@ -84,6 +84,8 @@ export default function CustomerRescueHistory() {
     if (key === "home") navigate("/home");
     if (key === "requests") navigate("/customer/requests");
     if (key === "account") navigate("/customer/account"); // bạn tạo sau
+    if (key === "chat") navigate("/chat");
+
   };
 
   return (

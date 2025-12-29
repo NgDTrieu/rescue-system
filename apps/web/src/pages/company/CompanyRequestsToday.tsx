@@ -85,6 +85,8 @@ export default function CompanyRequestsToday() {
     if (key === "home") navigate("/home");
     if (key === "requests") navigate("/company/requests");
     if (key === "account") navigate ("/company/account");
+    if (key === "chat") navigate("/chat");
+
   };
 
   return (

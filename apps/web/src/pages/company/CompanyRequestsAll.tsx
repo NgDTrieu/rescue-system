@@ -95,7 +95,8 @@ export default function CompanyRequestsAll() {
     setTab(key);
     if (key === "home") navigate("/home");
     if (key === "requests") navigate("/company/requests");
-    // nếu bạn có thêm key khác cho company thì add ở đây
+    if (key === "chat") navigate("/chat");
+
     if (key === "account") navigate ("/company/account");
   };
 

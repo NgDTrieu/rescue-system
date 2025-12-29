@@ -169,6 +169,8 @@ export default function CompanyHome() {
     if (key === "requests") navigate("/company/requests");
     if (key === "home") navigate("/home");
     if (key === "account") navigate ("/company/account");
+    if (key === "chat") navigate("/chat");
+
     // các key khác nếu company chưa dùng thì cứ để sau
   };
 

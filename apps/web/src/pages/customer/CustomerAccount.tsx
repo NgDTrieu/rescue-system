@@ -235,7 +235,7 @@ export default function CustomerAccount() {
             onChange={(key) => {
               if (key === "home") navigate("/home");
               else if (key === "requests") navigate("/customer/requests"); // đổi đúng route của bạn
-              // else if (key === "chat") navigate("/customer/community"); // nếu chưa có thì bạn đổi sau
+              else if (key === "chat") navigate("/chat");
               else navigate("/customer/account");
             }}
           />

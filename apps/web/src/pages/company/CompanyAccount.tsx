@@ -289,7 +289,8 @@ export default function CompanyAccount() {
             onChange={(key) => {
               if (key === "home") navigate("/home");
               else if (key === "requests") navigate("/company/requests");
-            //   else if (key === "chat") navigate("/company/chat");
+              else if (key === "chat") navigate("/chat");
+
               else navigate("/company/account");
             }}
           />
