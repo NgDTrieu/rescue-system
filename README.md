@@ -77,7 +77,7 @@ VITE_SOCKET_URL=http://localhost:4000
 
 ## ▶️ Chạy ứng dụng bằng Docker
 
-Tại thư mục gốc của project, chạy lệnh sau:
+Tại thư mục gốc của project, chạy lệnh sau (lần đầu thôi, mấy lần sau ae vào docker desktop bật cái container lên là được):
 
 ```bash
 docker compose -f docker-compose.dev.yml up --build
