@@ -105,11 +105,6 @@ Sau khi chạy thành công, hệ thống sẽ hoạt động tại:
 - **Email:** admin@rescue.local  
 - **Password:** admin123  
 
-> ⚠️ **Lưu ý về tài khoản Admin**  
-> - Hiện **chưa có giao diện đăng nhập Admin**  
-> - Tài khoản này dùng để test API duyệt company trên **Swagger** (`http://localhost:4000/docs`)  
->   hoặc test trực tiếp bằng **Postman**
-
 > ⚠️ **Lưu ý khi đăng ký mới tài khoản Company**
 > - Nếu chưa được admin duyệt mà đăng nhập thì không dùng được chức năng gì (có thể đăng nhập thử khi chưa được duyệt)
 > - Khi được duyệt xong thì nhớ vào phần tài khoản (ở thanh điều hướng dưới hoặc logo góc trên bên phải) để đăng ký dịch vụ mà công ty cung cấp (trong danh sách các dịch vụ đã có)
