@@ -7,7 +7,7 @@ Hệ thống cho phép:
 - Công ty cứu hộ tiếp nhận và xử lý các yêu cầu
 - Quản trị viên hệ thống quản lý và phê duyệt tài khoản công ty
 
-Ứng dụng đã được cấu hình sẵn, **người sử dụng chỉ cần chỉnh sửa biến môi trường và chạy bằng Docker**.
+Ứng dụng đã được cấu hình sẵn, để sử dụng chỉ cần chỉnh sửa biến môi trường và chạy bằng Docker.
 
 ---
 
@@ -30,9 +30,7 @@ Hệ thống cho phép:
 
 ## ⚙️ Yêu cầu trước khi chạy
 
-- Đã cài đặt:
-  - Docker Desktop
-- Có sẵn MongoDBCompass là một lợi thế :))) (để xem database trong lúc dùng á)
+- Đã cài đặt: Docker Desktop
 
 ---
 
@@ -46,16 +44,14 @@ Copy file biến môi trường mẫu:
 cp apps/api/.env.example apps/api/.env
 ```
 
-Mở file `apps/api/.env` và chỉnh tối thiểu các biến sau (t ghim trên nhóm á):
+Mở file `apps/api/.env` và chỉnh các biến sau:
+(mongo_uri có trong tài liệu về cơ sở dữ liệu của nhóm)
 
 ```env
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 PORT=4000
 ```
-
-> ⚠️ **Lưu ý:** Không commit file `.env` lên GitHub.
-
 ---
 
 ### 2️⃣ Frontend
@@ -77,7 +73,7 @@ VITE_SOCKET_URL=http://localhost:4000
 
 ## ▶️ Chạy ứng dụng bằng Docker
 
-Tại thư mục gốc của project, chạy lệnh sau (lần đầu thôi, mấy lần sau ae vào docker desktop bật cái container lên là được):
+Tại thư mục gốc của project, chạy lệnh sau:
 
 ```bash
 docker compose -f docker-compose.dev.yml up --build
@@ -107,8 +103,7 @@ Sau khi chạy thành công, hệ thống sẽ hoạt động tại:
 
 > ⚠️ **Lưu ý khi đăng ký mới tài khoản Company**
 > - Nếu chưa được admin duyệt mà đăng nhập thì không dùng được chức năng gì (có thể đăng nhập thử khi chưa được duyệt)
-> - Khi được duyệt xong thì nhớ vào phần tài khoản (ở thanh điều hướng dưới hoặc logo góc trên bên phải) để đăng ký dịch vụ mà công ty cung cấp (trong danh sách các dịch vụ đã có)
+> - Khi được duyệt xong, vào phần tài khoản (ở thanh điều hướng dưới hoặc logo góc trên bên phải) để đăng ký dịch vụ mà công ty cung cấp (trong danh sách các dịch vụ đã có)
 
 > ⚠️ **Lưu ý khi nhập tọa độ** 
-> - Cả khi đăng ký thông tin cho Company hay phần gửi yêu cầu của Customer đều chưa thể load bản đồ nên nhập tạm bằng tay nhé :))
-
+> - Cả khi đăng ký thông tin cho Company hay phần gửi yêu cầu của Customer đều chưa thể load bản đồ nên nhập các tọa độ bằng tay
